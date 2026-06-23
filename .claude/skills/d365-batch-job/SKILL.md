@@ -1,3 +1,8 @@
+---
+name: d365-batch-job
+description: Create a new D365 Finance & Operations batch job using the SysOperation framework (Controller → Contract → Service). Use whenever the user asks to create, add, or scaffold a batch job, SysOperation job, scheduled job, or background process in D365 / X++.
+---
+
 # D365 F&O: Create Batch Job
 
 You are helping create a batch job in D365 Finance & Operations using the SysOperation framework (Controller → Contract → Service pattern).

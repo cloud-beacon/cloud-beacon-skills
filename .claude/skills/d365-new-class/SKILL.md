@@ -1,3 +1,8 @@
+---
+name: d365-new-class
+description: Create a new X++ class in D365 Finance & Operations with correct metadata, naming, and labels. Use when the user asks to create, add, or scaffold a new X++ class — helper, utility, data contract, event handler, table/form extension class, service class, or general class — in a D365 F&O model.
+---
+
 # D365 F&O: Create X++ Class
 
 You are helping create an X++ class in D365 Finance & Operations.

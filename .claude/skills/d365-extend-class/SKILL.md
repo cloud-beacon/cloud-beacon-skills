@@ -1,3 +1,8 @@
+---
+name: d365-extend-class
+description: Extend an existing D365 Finance & Operations class using Chain of Command (CoC) — wrapping base methods or adding new methods without modifying the base. Use whenever the user asks to extend, wrap, or hook a base class (e.g. SalesFormLetter, InventMov_Transfer), write Chain of Command code, or add CoC overrides. Do not use for new classes — see d365-new-class for that.
+---
+
 # D365 F&O: Extend Existing Class (Chain of Command)
 
 You are helping extend an existing class in D365 Finance & Operations using Chain of Command (CoC). This wraps or adds methods to a base class WITHOUT modifying the original.

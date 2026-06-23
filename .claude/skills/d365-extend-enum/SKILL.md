@@ -1,3 +1,8 @@
+---
+name: d365-extend-enum
+description: Extend an existing D365 Finance & Operations enum by adding new values, when the base enum is IsExtensible. Use whenever the user asks to extend a base enum, add new values to an existing enum (e.g. SalesStatus, InventTransType), or create an enum extension. Do not use for new enums — see d365-new-enum for that.
+---
+
 # D365 F&O: Extend Existing Enum
 
 You are helping extend an existing enumeration in D365 Finance & Operations using enum extensions. This adds new values to a base enum WITHOUT modifying the original.

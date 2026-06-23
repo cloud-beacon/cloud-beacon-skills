@@ -1,3 +1,8 @@
+---
+name: d365-extend-form
+description: Extend an existing D365 Finance & Operations form via a form extension — adding controls, data sources, or methods without modifying the base. Use whenever the user asks to extend a base form, add controls/buttons/tabs to an existing form, or create a form extension. Do not use for new forms — see d365-new-form for that.
+---
+
 # D365 F&O: Extend Existing Form
 
 You are helping extend an existing form in D365 Finance & Operations using form extensions. This adds controls, data sources, or methods to a base form WITHOUT modifying the original.

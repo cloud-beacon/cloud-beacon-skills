@@ -1,3 +1,8 @@
+---
+name: d365-new-enum
+description: Create a new enumeration (enum) in D365 Finance & Operations, including extensibility and label setup. Use whenever the user asks to create, add, or scaffold a new D365 / X++ enum, base enum, status enum, or other enumerated type.
+---
+
 # D365 F&O: Create Enumeration (Enum)
 
 You are helping create an enumeration (enum) in D365 Finance & Operations.

@@ -1,3 +1,8 @@
+---
+name: d365-new-entity
+description: Create a new Data Entity in D365 Finance & Operations for OData and Data Management Framework (DMF) integration. Use whenever the user asks to create, add, or expose a D365 data entity, OData endpoint, DMF entity, integration entity, or staging-table-backed entity — including key field selection and DMF staging.
+---
+
 # D365 F&O: Create Data Entity
 
 You are helping create a Data Entity in D365 Finance & Operations for OData APIs and Data Management Framework (DMF) integration.

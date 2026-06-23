@@ -1,3 +1,8 @@
+---
+name: d365-extend-edt
+description: Extend an existing D365 Finance & Operations EDT by modifying allowed properties (Label, HelpText, StringSize, FormHelp). Use whenever the user asks to extend an existing EDT, change properties on a base EDT (e.g. Description, ItemId), or create an EDT extension. Do not use for new EDTs — see d365-new-edt for that.
+---
+
 # D365 F&O: Extend Existing EDT
 
 You are helping extend an existing Extended Data Type (EDT) in D365 Finance & Operations using EDT extensions. This modifies properties of a base EDT WITHOUT modifying the original.

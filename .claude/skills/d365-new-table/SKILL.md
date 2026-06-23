@@ -1,3 +1,8 @@
+---
+name: d365-new-table
+description: Scaffold a new D365 Finance & Operations table end-to-end — AxTable, AxForm (SimpleList or SimpleListDetails), AxMenuItemDisplay, AxSecurityPrivilege (Maintain + View), AxSecurityDuty, and labels. Use whenever the user asks to create, add, scaffold, or stand up a new D365 / X++ / AX table or persistent entity, especially when they want the full pattern (table + form + menu + security) rather than just one piece.
+---
+
 # D365 F&O: Create New Table End-to-End
 
 You are helping create a new table in D365 Finance & Operations with full UI and security integration.

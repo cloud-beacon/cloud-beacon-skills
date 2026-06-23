@@ -1,3 +1,8 @@
+---
+name: d365-new-feature
+description: Create a new Feature Management class in D365 Finance & Operations to gate functionality behind the Feature Management workspace. Use whenever the user asks to create, add, or set up a feature flag, Feature Management entry, gated feature, or toggleable capability in D365 / X++.
+---
+
 # D365 F&O: Create Feature Management Class
 
 You are helping create a Feature Management class in D365 Finance & Operations to gate functionality behind the Feature Management workspace.

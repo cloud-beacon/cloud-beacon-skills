@@ -1,3 +1,8 @@
+---
+name: d365-fix-encoding
+description: Fix CRLF line endings on D365 Finance & Operations metadata XML files. Use whenever the user reports D365 / X++ XML files failing to open in Visual Studio, metadata parsing errors, files silently ignored by the D365 toolchain, or mentions LF / Unix line endings on AxTable / AxForm / AxClass / other D365 metadata. Also trigger when finalizing newly-written D365 XML files to normalize encoding.
+---
+
 # D365 F&O: Fix File Encoding (CRLF)
 
 You are helping fix file encoding issues in D365 Finance & Operations. This is a CRITICAL issue that causes files to become unreadable by Visual Studio and D365 tooling.

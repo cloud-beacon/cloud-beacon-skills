@@ -40,102 +40,99 @@ Copy-Item -Path "cloud-beacon-skills\.claude\skills\*"   -Destination "$env:USER
 
 Skills load automatically when their description matches the context — no command needed.
 
+### Cloud Beacon brand & engineering
+
 | Skill | Trigger | Description |
 |-------|---------|-------------|
-| `cb-voice` | "rewrite in CB voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Cloud Beacon brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
-| `cb-brand` | Styling any CB-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Cloud Beacon visual identity — exact color palette, typography, spacing, and component patterns |
+| `cb-voice` | "rewrite in CB voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
+| `cb-brand` | Styling any CB-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Visual identity — exact color palette, typography, spacing, and component patterns |
 | `docx-survival` | `import { ... } from 'docx'`, building DOCX exporters, "Word found unreadable content" debugging | Hard-won gotchas for the `docx` npm package (v9) — image type, SVG handling, TextRun pitfalls, hyperlink bug |
-
-## Available Slash Commands
 
 ### D365 Finance & Operations
 
-#### Documentation & Automation
-| Skill | Command | Description |
-|-------|---------|-------------|
-| Create Documentation | `/d365-create-docs` | Generate architecture, user guide, and functional guide for a module |
+See [D365-NOTES.md](D365-NOTES.md) for cross-cutting D365 knowledge (CRLF rules, `.rnrproj` layout, common gotchas, workflow examples).
 
-#### Create New Artifacts
-| Skill | Command | Description |
-|-------|---------|-------------|
-| New Class | `/d365-new-class` | Create X++ class with proper metadata |
-| New Table | `/d365-new-table` | Create table end-to-end (table, form, menu item, security) |
-| New Form | `/d365-new-form` | Create form with standard patterns |
-| New Data Entity | `/d365-new-entity` | Create data entity with staging table |
-| New Enum | `/d365-new-enum` | Create enumeration |
-| New EDT | `/d365-new-edt` | Create Extended Data Type |
-| New Query | `/d365-new-query` | Create AOT query |
-| New Service | `/d365-new-service` | Create web service (service class, contract, group) |
-| New Menu | `/d365-new-menu` | Create menu and menu extension |
-| New Workspace | `/d365-new-workspace` | Create workspace with tiles and lists |
-| New Feature | `/d365-new-feature` | Create Feature Management class |
-| New Number Sequence | `/d365-new-number-sequence` | Create number sequence with references |
-| New Batch Job | `/d365-batch-job` | Create batch job (controller, service, contract) |
+| Skill | Triggers on |
+|-------|-------------|
+| `d365-new-table` | "create / add a new table", end-to-end table + form + menu + security |
+| `d365-new-form` | "create a form", SimpleList / SimpleListDetails / custom patterns |
+| `d365-new-class` | "create an X++ class", helpers, contracts, handlers, services |
+| `d365-new-enum` | "create an enum" / extensibility setup |
+| `d365-new-edt` | "create an EDT" / reusable typed field |
+| `d365-new-entity` | "create a data entity", OData/DMF integration |
+| `d365-new-service` | "expose a web service", SOAP/JSON service group |
+| `d365-new-query` | "create an AOT query" |
+| `d365-new-menu` | "add to navigation", menu / menu extension |
+| `d365-new-workspace` | "create a workspace" / role center / tile-driven landing page |
+| `d365-new-feature` | "add a feature flag" / Feature Management gate |
+| `d365-new-number-sequence` | "wire up a number sequence" / auto-numbered ID |
+| `d365-batch-job` | "create a batch job", SysOperation Controller → Contract → Service |
+| `d365-extend-table` | "extend SalesTable" / add fields to a base table |
+| `d365-extend-form` | "add a button/tab to an existing form", form extension |
+| `d365-extend-class` | "wrap method with CoC", Chain of Command |
+| `d365-extend-enum` | "add a value to a base enum" |
+| `d365-extend-edt` | "change a property on a base EDT" |
+| `d365-security` | "set up security for X", Role → Duty → Privilege → Entry Point |
+| `d365-create-docs` | "write the Architecture / User / Functional guide for this module" |
+| `d365-fix-encoding` | "files won't open in VS" / CRLF normalization / D365 metadata encoding |
 
-#### Extend Existing Artifacts
-| Skill | Command | Description |
-|-------|---------|-------------|
-| Extend Table | `/d365-extend-table` | Create table extension |
-| Extend Form | `/d365-extend-form` | Create form extension |
-| Extend Class | `/d365-extend-class` | Create Chain of Command extension |
-| Extend Enum | `/d365-extend-enum` | Create enum extension |
-| Extend EDT | `/d365-extend-edt` | Create EDT extension |
+## Available Slash Commands
 
-#### Security & Utilities
-| Skill | Command | Description |
-|-------|---------|-------------|
-| Security Model | `/d365-security` | Create privileges, duties, and roles |
-| Fix Encoding | `/d365-fix-encoding` | Fix CRLF line endings on metadata XML files |
+Slash commands require explicit invocation (`/<name>`). Reserved for workflows with real side effects that shouldn't auto-fire from conversational drift.
 
-### Automation
-
-| Skill | Command | Description |
-|-------|---------|-------------|
-| CB Agent | `/cb-agent` | Automated ADO work item processor for CloudBeacon development |
+| Command | Description |
+|---------|-------------|
+| `/cb-agent` | Automated Azure DevOps work item processor — creates branches, makes commits, opens PRs. Explicit invocation required because it modifies ADO state. |
 
 ## Usage
 
-**Slash commands** — invoke explicitly:
+**Skills** load automatically when relevant. Just describe what you want:
+
+> "let's add a new VendInvoiceLog table" → `d365-new-table` fires
+>
+> "rewrite this section to be customer-facing" → `cb-voice` fires
+>
+> "this exports a corrupt .docx" → `docx-survival` fires
+
+**Slash commands** are typed explicitly:
 
 ```
-/d365-new-table
+/cb-agent
 ```
-
-Claude will guide you through the process, asking for necessary parameters and creating all required artifacts.
-
-**Skills** — load automatically when relevant. For example, asking Claude to "rewrite this section to be customer-facing" will auto-trigger `cb-voice` if installed. No invocation required.
 
 ## Repository Layout
 
 ```
-.claude/
-├── commands/                      # Slash commands (explicit invocation)
-│   ├── d365-new-*.md              # Create new D365 artifacts
-│   ├── d365-extend-*.md           # Extend existing D365 artifacts
-│   ├── d365-batch-job.md          # Batch processing
-│   ├── d365-security.md           # Security model
-│   ├── d365-create-docs.md        # Documentation generation
-│   ├── d365-fix-encoding.md       # Utility
-│   ├── cb-agent.md                # ADO integration
-│   └── D365-SKILLS-README.md      # Slash command reference
-└── skills/                        # Auto-triggering skills (context-loaded)
-    ├── cb-voice/SKILL.md          # Brand voice & tone for customer-facing writing
-    ├── cb-brand/SKILL.md          # Visual identity tokens & component patterns
-    └── docx-survival/SKILL.md     # `docx` npm package gotchas
+.
+├── D365-NOTES.md                  # Cross-cutting D365 F&O knowledge
+└── .claude/
+    ├── commands/                  # Slash commands (explicit invocation)
+    │   └── cb-agent.md            # ADO work item processor
+    └── skills/                    # Auto-triggering skills (context-loaded)
+        ├── cb-voice/SKILL.md      # Brand voice & tone
+        ├── cb-brand/SKILL.md      # Visual identity tokens & patterns
+        ├── docx-survival/SKILL.md # `docx` npm package gotchas
+        ├── d365-new-*/SKILL.md    # Create new D365 artifacts
+        ├── d365-extend-*/SKILL.md # Extend base D365 artifacts
+        ├── d365-batch-job/SKILL.md
+        ├── d365-security/SKILL.md
+        ├── d365-create-docs/SKILL.md
+        └── d365-fix-encoding/SKILL.md
 ```
 
 ## Requirements
 
 - Claude Code CLI or VS Code extension
 - For D365 skills: D365 F&O development environment, PowerShell
-- For automation skills: Azure DevOps access (where applicable)
+- For `/cb-agent`: Azure DevOps access and `az` CLI configured
 
 ## Customization
 
-Each skill is a markdown file in `.claude/commands/`. You can:
-- Modify existing skills to match your naming conventions
-- Add new skills following the same pattern
-- Organize skills into subdirectories by category
+Skills live at `.claude/skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`). The `description` is what determines when the skill auto-loads — be specific. Slash commands live at `.claude/commands/<name>.md` as plain markdown. You can:
+
+- Tighten or broaden a skill's `description` to control when it fires
+- Modify templates inside each skill to match your naming conventions
+- Add new skills or commands following the same pattern
 
 ### D365 Model Context
 

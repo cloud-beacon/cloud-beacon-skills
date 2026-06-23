@@ -1,3 +1,8 @@
+---
+name: d365-new-service
+description: Create a new D365 Finance & Operations web service (service class, service group, request/response contracts) for SOAP or JSON integration. Use whenever the user asks to expose, create, or scaffold a D365 web service, SOAP service, JSON service, integration endpoint, or service operations for external callers.
+---
+
 # D365 F&O: Create Web Service
 
 You are helping create a web service in D365 Finance & Operations for external integration via SOAP or JSON endpoints.

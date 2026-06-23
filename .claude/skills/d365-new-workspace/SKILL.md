@@ -1,3 +1,8 @@
+---
+name: d365-new-workspace
+description: Create a new D365 Finance & Operations Workspace — a role-centric landing page with tiles (KPIs/counts), links, and lists for a functional area. Use whenever the user asks to create, add, or scaffold a workspace, role center, landing page, or tile-driven view in D365.
+---
+
 # D365 F&O: Create Workspace
 
 You are helping create a Workspace in D365 Finance & Operations. Workspaces are role-centric landing pages that aggregate key information, actions, and links for a functional area.

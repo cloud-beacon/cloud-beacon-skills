@@ -1,3 +1,8 @@
+---
+name: d365-new-form
+description: Create a new D365 Finance & Operations form using standard patterns (SimpleList, SimpleListDetails, DetailsFormMaster, Custom). Use whenever the user asks to create, add, or scaffold a new form for displaying or editing D365 / X++ data, including selecting a form pattern and wiring up data sources.
+---
+
 # D365 F&O: Create Form
 
 You are helping create a form in D365 Finance & Operations for displaying and editing data.

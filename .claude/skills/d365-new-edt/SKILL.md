@@ -1,3 +1,8 @@
+---
+name: d365-new-edt
+description: Create a new Extended Data Type (EDT) in D365 Finance & Operations — string, integer, real, int64, enum, date, datetime, container, or guid. Use whenever the user asks to create, add, or scaffold a new D365 EDT, reusable field type, or typed identifier (e.g. MyFieldId, MyCode).
+---
+
 # D365 F&O: Create Extended Data Type (EDT)
 
 You are helping create an Extended Data Type (EDT) in D365 Finance & Operations. EDTs define reusable field types with consistent properties like length, labels, and formatting.

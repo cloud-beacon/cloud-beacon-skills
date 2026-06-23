@@ -1,3 +1,8 @@
+---
+name: d365-create-docs
+description: Generate Cloud Beacon's standardized D365 F&O module documentation set — Architecture (developer-focused), User Guide (end-user), and Functional Guide (consultant/analyst) — following the PLM/SOV patterns. Use whenever the user asks to create, write, or generate documentation for a D365 module, write the architecture/user/functional guides, or document a feature area for a customer deliverable.
+---
+
 # D365 F&O: Create Module Documentation
 
 <command-name>d365-create-docs</command-name>

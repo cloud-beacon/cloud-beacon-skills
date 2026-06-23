@@ -1,3 +1,8 @@
+---
+name: d365-new-number-sequence
+description: Create a new number sequence in D365 Finance & Operations for automatic sequential numbering of document IDs, transaction numbers, or other identifiers. Use whenever the user asks to add, create, or wire up a number sequence, auto-numbered ID, or sequence reference for a new field.
+---
+
 # D365 F&O: Create Number Sequence
 
 You are helping create a number sequence in D365 Finance & Operations. Number sequences provide automatic, sequential numbering for document IDs, transaction numbers, and other identifiers.

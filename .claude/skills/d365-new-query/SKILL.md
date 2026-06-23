@@ -1,3 +1,8 @@
+---
+name: d365-new-query
+description: Create a new AOT Query in D365 Finance & Operations to define reusable data retrieval for forms, reports, tiles, or data entities. Use whenever the user asks to create, add, or scaffold a new D365 query, AOT query, or backing query for a report/tile/entity.
+---
+
 # D365 F&O: Create Query
 
 You are helping create a query in D365 Finance & Operations. Queries define reusable data retrieval logic for forms, reports, tiles, and data entities.

@@ -1,3 +1,8 @@
+---
+name: d365-new-menu
+description: Create new D365 Finance & Operations menus and menu extensions, wiring forms/actions/reports into the navigation system. Use whenever the user asks to create, add, or extend a menu, submenu, navigation entry, or module nav for a D365 / X++ feature.
+---
+
 # D365 F&O: Create Menu & Menu Extension
 
 You are helping create menus and menu extensions in D365 Finance & Operations to integrate features into the navigation system.

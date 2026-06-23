@@ -1,63 +1,68 @@
-# D365 F&O Development Skills for Claude Code
+# D365 F&O Development Notes
 
-This collection of skills helps developers create D365 Finance & Operations artifacts using Claude Code. Each skill provides templates, guidance, and best practices learned from real-world D365 development.
+Shared knowledge that applies across the D365 F&O skills in this repo. Skills auto-trigger based on the user's intent (no slash command needed) — these notes capture the cross-cutting D365 facts every skill assumes.
 
-## Quick Start
+## How the skills load
 
-1. Copy the `d365-*.md` files to your project's `.claude/commands/` folder
-2. In Claude Code, type `/d365-` to see all available skills
-3. Invoke a skill like `/d365-new-table` and follow the prompts
+These are auto-triggering skills, not slash commands. Describe what you're trying to do in plain English and the matching skill loads on its own:
 
-## Available Skills
+- "let's add a new VendInvoiceLog table" → `d365-new-table` fires
+- "extend SalesTable with a custom field" → `d365-extend-table` fires
+- "wrap SalesFormLetter.run with a CoC method" → `d365-extend-class` fires
+- "create a data entity for that table" → `d365-new-entity` fires
+- "the XML files won't open in VS" → `d365-fix-encoding` fires
+
+## Available D365 skills
 
 ### Core Artifacts
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **New Table** | `/d365-new-table` | Complete table with fields, indexes, form, menu item, and security |
-| **New Form** | `/d365-new-form` | Forms with SimpleList, SimpleListDetails, or custom patterns |
-| **New Class** | `/d365-new-class` | X++ classes with common patterns (data contracts, helpers, handlers) |
-| **New Enum** | `/d365-new-enum` | Enumerations with values and extensibility options |
-| **New EDT** | `/d365-new-edt` | Extended Data Types (String, Int, Real, DateTime, etc.) |
+| Skill | Description |
+|-------|-------------|
+| `d365-new-table` | Complete table with fields, indexes, form, menu item, and security |
+| `d365-new-form` | Forms with SimpleList, SimpleListDetails, or custom patterns |
+| `d365-new-class` | X++ classes with common patterns (data contracts, helpers, handlers) |
+| `d365-new-enum` | Enumerations with values and extensibility options |
+| `d365-new-edt` | Extended Data Types (String, Int, Real, DateTime, etc.) |
 
 ### Integration & APIs
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **Data Entity** | `/d365-new-entity` | OData entities with DMF staging for data import/export |
-| **Service** | `/d365-new-service` | Web services with service groups for external integration |
-| **Batch Job** | `/d365-batch-job` | SysOperation batch jobs (Controller → Contract → Service) |
-| **Number Sequence** | `/d365-new-number-sequence` | Auto-numbering with module registration and wizard setup |
+| Skill | Description |
+|-------|-------------|
+| `d365-new-entity` | OData entities with DMF staging for data import/export |
+| `d365-new-service` | Web services with service groups for external integration |
+| `d365-batch-job` | SysOperation batch jobs (Controller → Contract → Service) |
+| `d365-new-number-sequence` | Auto-numbering with module registration and wizard setup |
 
 ### Navigation & UI
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **Workspace** | `/d365-new-workspace` | Operational workspaces with tiles, lists, and links |
-| **Menu** | `/d365-new-menu` | Menus and menu extensions for navigation integration |
+| Skill | Description |
+|-------|-------------|
+| `d365-new-workspace` | Operational workspaces with tiles, lists, and links |
+| `d365-new-menu` | Menus and menu extensions for navigation integration |
 
 ### Security & Features
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **Security Model** | `/d365-security` | Role → Duty → Privilege → Entry Point hierarchy |
-| **Feature Management** | `/d365-new-feature` | Feature toggle classes for Feature Management workspace |
+| Skill | Description |
+|-------|-------------|
+| `d365-security` | Role → Duty → Privilege → Entry Point hierarchy |
+| `d365-new-feature` | Feature toggle classes for Feature Management workspace |
 
 ### Extensions (Modify Base Objects)
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **Extend Table** | `/d365-extend-table` | Add fields, indexes, relations to base tables |
-| **Extend Form** | `/d365-extend-form` | Add controls, data sources to base forms |
-| **Extend Class** | `/d365-extend-class` | Chain of Command for base classes |
-| **Extend Enum** | `/d365-extend-enum` | Add values to extensible base enums |
-| **Extend EDT** | `/d365-extend-edt` | Modify properties of base EDTs |
+| Skill | Description |
+|-------|-------------|
+| `d365-extend-table` | Add fields, indexes, relations to base tables |
+| `d365-extend-form` | Add controls, data sources to base forms |
+| `d365-extend-class` | Chain of Command for base classes |
+| `d365-extend-enum` | Add values to extensible base enums |
+| `d365-extend-edt` | Modify properties of base EDTs |
 
-### Utilities
+### Documentation & Utilities
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| **Fix Encoding** | `/d365-fix-encoding` | Diagnose and fix CRLF line ending issues |
+| Skill | Description |
+|-------|-------------|
+| `d365-create-docs` | Generate Architecture / User / Functional guides for a module |
+| `d365-fix-encoding` | Diagnose and fix CRLF line ending issues |
 
 ## Critical Knowledge
 
@@ -85,7 +90,7 @@ Get-ChildItem -Path ".\AxClass",".\AxTable",".\AxForm" -Recurse -Filter "*.xml" 
 }
 ```
 
-Use `/d365-fix-encoding` for detailed guidance.
+The `d365-fix-encoding` skill auto-loads when you mention encoding issues or finalize newly-written D365 XML files.
 
 ### Visual Studio Project File (.rnrproj)
 
@@ -129,18 +134,18 @@ After creating artifacts, add them to your Visual Studio project file:
 
 ## Workflow Example
 
-Here's a typical workflow for adding a new feature:
+A typical end-to-end feature build hits these skills in order — each loads automatically as you describe the step:
 
 ```
-1. /d365-new-enum        → Create status enum
-2. /d365-new-edt         → Create custom EDTs
-3. /d365-new-table       → Create table with fields
-4. /d365-new-entity      → Create data entity for OData/DMF
-5. /d365-new-form        → Create form (or included in table skill)
-6. /d365-new-menu        → Add to navigation
-7. /d365-security        → Create privileges, duties, roles
-8. /d365-new-feature     → (Optional) Gate behind Feature Management
-9. /d365-fix-encoding    → Normalize all files to CRLF
+1. d365-new-enum             → Status enum
+2. d365-new-edt              → Custom EDTs
+3. d365-new-table            → Table with fields
+4. d365-new-entity           → Data entity for OData/DMF
+5. d365-new-form             → Form (or included in table skill)
+6. d365-new-menu             → Navigation entry
+7. d365-security             → Privileges, duties, roles
+8. d365-new-feature          → (Optional) Feature Management gate
+9. d365-fix-encoding         → Normalize CRLF on all written files
 ```
 
 ## Labels
@@ -175,13 +180,14 @@ These skills are markdown files that Claude Code loads as context. You can:
 
 ## Troubleshooting
 
-### Skill Not Found
-- Verify `.md` file is in `.claude/commands/` folder
-- Check filename matches `d365-*.md` pattern
-- Restart Claude Code if recently added
+### Skill Not Loading
+- Verify `SKILL.md` is at `.claude/skills/<name>/SKILL.md` (not in `.claude/commands/`)
+- Confirm the YAML frontmatter has `name` and `description` fields
+- Restart Claude Code if recently installed
+- If a skill should be firing but isn't, describe your intent more concretely — skills match on description keywords
 
 ### Build Errors After Creating Files
-1. Run `/d365-fix-encoding` to normalize line endings
+1. Let `d365-fix-encoding` normalize line endings (mention encoding/CRLF and it loads)
 2. Verify XML is well-formed (check for missing closing tags)
 3. Check `i:type` and `xmlns` attributes on polymorphic elements
 4. Verify artifacts are added to `.rnrproj` file

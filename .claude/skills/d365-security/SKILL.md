@@ -1,3 +1,8 @@
+---
+name: d365-security
+description: Build a D365 Finance & Operations security model following Role → Duty → Privilege → Entry Point. Use whenever the user asks to set up, scaffold, or wire security for a functional area — privileges, duties, roles, securing forms/menu items/data entities, or Maintain vs View access.
+---
+
 # D365 F&O: Create Security Model
 
 You are helping create a security model in D365 Finance & Operations following the Role → Duty → Privilege → Entry Point hierarchy.

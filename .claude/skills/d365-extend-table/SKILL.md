@@ -1,3 +1,8 @@
+---
+name: d365-extend-table
+description: Extend an existing D365 Finance & Operations table via a table extension — adding fields, indexes, field groups, relations, or methods without modifying the base. Use whenever the user asks to extend a base table (e.g. SalesTable, InventTable, CustTable), add fields to an existing table, or create a table extension. Do not use for new tables — see d365-new-table for that.
+---
+
 # D365 F&O: Extend Existing Table
 
 You are helping extend an existing table in D365 Finance & Operations using table extensions. This adds fields, indexes, field groups, relations, or methods to a base table WITHOUT modifying the original.
