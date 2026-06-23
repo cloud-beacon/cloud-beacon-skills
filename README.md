@@ -26,7 +26,10 @@ Create symlinks so updates to the skills repo are immediately available:
 # From your project directory
 New-Item -ItemType SymbolicLink -Path ".claude\commands" -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\commands"
 New-Item -ItemType SymbolicLink -Path ".claude\skills"   -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\skills"
+New-Item -ItemType SymbolicLink -Path ".claude\hooks"    -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\hooks"
 ```
+
+> **Note:** `New-Item -ItemType SymbolicLink` on Windows requires either an elevated shell (Run as Administrator) or [Developer Mode enabled](https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging) (Settings → Privacy & security → For developers).
 
 ### Option 3: Global Installation
 Copy to your global Claude Code config to make commands and skills available in all projects:
@@ -51,6 +54,15 @@ Skills load automatically when their description matches the context — no comm
 ### D365 Finance & Operations
 
 See [D365-NOTES.md](D365-NOTES.md) for cross-cutting D365 knowledge (CRLF rules, `.rnrproj` layout, common gotchas, workflow examples).
+
+**Review & Quality**
+
+| Skill | Triggers on |
+|-------|-------------|
+| `xpp-code-review` | "review this X++", critiquing/sanity-checking D365 objects, PRs, shelvesets — 19-category severity-rated check framework |
+| `tfvc-fetch` | "show me shelveset X", "diff for changeset 12345", fetching ADO TFVC changes as review-ready Markdown (read-only) |
+
+**Create / Extend Artifacts**
 
 | Skill | Triggers on |
 |-------|-------------|
@@ -84,6 +96,16 @@ Slash commands require explicit invocation (`/<name>`). Reserved for workflows w
 |---------|-------------|
 | `/cb-agent` | Automated Azure DevOps work item processor — creates branches, makes commits, opens PRs. Explicit invocation required because it modifies ADO state. |
 
+## Hooks
+
+Configured in [`.claude/settings.json`](.claude/settings.json). Hooks fire automatically on Claude Code tool events — they run reliably regardless of whether a skill remembered to mention them.
+
+| Hook | Fires on | What it does |
+|------|----------|--------------|
+| `d365-normalize-crlf` | `PostToolUse` for `Write` / `Edit` / `MultiEdit` | Detects D365 metadata XML paths (`Ax<Type>\*.xml`) and normalizes line endings to CRLF immediately after write. No-ops silently on non-D365 files. |
+
+Hooks travel with the `.claude/` folder — copying or symlinking the repo into your project activates them automatically.
+
 ## Usage
 
 **Skills** load automatically when relevant. Just describe what you want:
@@ -104,16 +126,24 @@ Slash commands require explicit invocation (`/<name>`). Reserved for workflows w
 
 ```
 .
-├── D365-NOTES.md                  # Cross-cutting D365 F&O knowledge
+├── D365-NOTES.md                       # Cross-cutting D365 F&O knowledge
+├── CONTRIBUTING.md                     # How to author skills, commands, and hooks
 └── .claude/
-    ├── commands/                  # Slash commands (explicit invocation)
-    │   └── cb-agent.md            # ADO work item processor
-    └── skills/                    # Auto-triggering skills (context-loaded)
-        ├── cb-voice/SKILL.md      # Brand voice & tone
-        ├── cb-brand/SKILL.md      # Visual identity tokens & patterns
-        ├── docx-survival/SKILL.md # `docx` npm package gotchas
-        ├── d365-new-*/SKILL.md    # Create new D365 artifacts
-        ├── d365-extend-*/SKILL.md # Extend base D365 artifacts
+    ├── settings.json                   # Hook registrations
+    ├── hooks/
+    │   └── d365-normalize-crlf.ps1     # PostToolUse CRLF normalizer
+    ├── commands/                       # Slash commands (explicit invocation)
+    │   └── cb-agent.md                 # ADO work item processor
+    └── skills/                         # Auto-triggering skills (context-loaded)
+        ├── cb-voice/SKILL.md           # Brand voice & tone
+        ├── cb-brand/SKILL.md           # Visual identity tokens & patterns
+        ├── docx-survival/SKILL.md      # `docx` npm package gotchas
+        ├── xpp-code-review/SKILL.md    # X++ code review framework
+        ├── tfvc-fetch/                 # TFVC shelveset/changeset diff fetcher
+        │   ├── SKILL.md
+        │   └── scripts/tfvc_review.py
+        ├── d365-new-*/SKILL.md         # Create new D365 artifacts
+        ├── d365-extend-*/SKILL.md      # Extend base D365 artifacts
         ├── d365-batch-job/SKILL.md
         ├── d365-security/SKILL.md
         ├── d365-create-docs/SKILL.md
@@ -152,11 +182,15 @@ D365 skills reference a `Model Context` section from CLAUDE.md. Ensure your proj
 
 ## Contributing
 
-1. Fork this repository
-2. Create a feature branch
-3. Add or modify skills
-4. Test in your environment
-5. Submit a pull request
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the full guide — skill vs. command vs. hook decision tree, frontmatter rules, how to write a `description` that actually fires, and hook safety patterns.
+
+Quick version:
+
+1. Fork or branch off `main`
+2. Add or modify the skill / command / hook
+3. Test by symlinking your branch into a real project and verifying the trigger fires (or doesn't) where expected
+4. Update [`README.md`](README.md) and [`D365-NOTES.md`](D365-NOTES.md) if applicable
+5. Open a PR
 
 ## License
 
