@@ -1,33 +1,52 @@
 # Cloud Beacon Skills
 
-A collection of reusable Claude Code skills for Cloud Beacon development, including D365 Finance & Operations, Azure, and automation workflows.
+A collection of reusable Claude Code skills and slash commands for Cloud Beacon development, including D365 Finance & Operations, Azure, brand/voice standards, and automation workflows.
+
+## Skills vs. Commands
+
+This repo contains two flavors of Claude Code extension:
+
+- **Slash commands** (`.claude/commands/*.md`) — Explicit, one-shot workflows you invoke by typing `/<name>`. Best for "do this thing now" generators (e.g. `/d365-new-table` scaffolds a new table).
+- **Skills** (`.claude/skills/<name>/SKILL.md`) — Context that auto-loads when relevant, based on the skill's `description` frontmatter. Best for reference standards and gotchas that should apply across many requests without explicit invocation (e.g. `cb-voice` fires whenever the user is editing CB-facing content).
 
 ## Installation
 
 ### Option 1: Clone to Your Project
-Clone this repo and copy the `.claude/commands/` folder to your project:
+Clone this repo and copy the `.claude/` folder to your project:
 
 ```powershell
-git clone https://github.com/cloudbeacondev/cloud-beacon-skills.git
+git clone https://github.com/cloud-beacon/cloud-beacon-skills.git
 Copy-Item -Path "cloud-beacon-skills\.claude" -Destination "path\to\your\project\" -Recurse
 ```
 
 ### Option 2: Symlink (Recommended for Development)
-Create a symlink so updates to the skills repo are immediately available:
+Create symlinks so updates to the skills repo are immediately available:
 
 ```powershell
 # From your project directory
 New-Item -ItemType SymbolicLink -Path ".claude\commands" -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\commands"
+New-Item -ItemType SymbolicLink -Path ".claude\skills"   -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\skills"
 ```
 
 ### Option 3: Global Installation
-Copy to your global Claude Code config to make skills available in all projects:
+Copy to your global Claude Code config to make commands and skills available in all projects:
 
 ```powershell
 Copy-Item -Path "cloud-beacon-skills\.claude\commands\*" -Destination "$env:USERPROFILE\.claude\commands\" -Force
+Copy-Item -Path "cloud-beacon-skills\.claude\skills\*"   -Destination "$env:USERPROFILE\.claude\skills\"   -Force
 ```
 
-## Available Skills
+## Available Skills (auto-triggering)
+
+Skills load automatically when their description matches the context — no command needed.
+
+| Skill | Trigger | Description |
+|-------|---------|-------------|
+| `cb-voice` | "rewrite in CB voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Cloud Beacon brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
+| `cb-brand` | Styling any CB-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Cloud Beacon visual identity — exact color palette, typography, spacing, and component patterns |
+| `docx-survival` | `import { ... } from 'docx'`, building DOCX exporters, "Word found unreadable content" debugging | Hard-won gotchas for the `docx` npm package (v9) — image type, SVG handling, TextRun pitfalls, hyperlink bug |
+
+## Available Slash Commands
 
 ### D365 Finance & Operations
 
@@ -76,7 +95,7 @@ Copy-Item -Path "cloud-beacon-skills\.claude\commands\*" -Destination "$env:USER
 
 ## Usage
 
-After installation, invoke any skill by typing its command in Claude Code:
+**Slash commands** — invoke explicitly:
 
 ```
 /d365-new-table
@@ -84,20 +103,25 @@ After installation, invoke any skill by typing its command in Claude Code:
 
 Claude will guide you through the process, asking for necessary parameters and creating all required artifacts.
 
-## Skill Categories
+**Skills** — load automatically when relevant. For example, asking Claude to "rewrite this section to be customer-facing" will auto-trigger `cb-voice` if installed. No invocation required.
+
+## Repository Layout
 
 ```
-.claude/commands/
-├── D365 Development
-│   ├── d365-new-*.md       # Create new artifacts
-│   ├── d365-extend-*.md    # Extend existing artifacts
-│   ├── d365-batch-job.md   # Batch processing
-│   ├── d365-security.md    # Security model
-│   ├── d365-create-docs.md # Documentation generation
-│   └── d365-fix-encoding.md# Utility
-├── Automation
-│   └── cb-agent.md         # ADO integration
-└── D365-SKILLS-README.md   # Skills reference
+.claude/
+├── commands/                      # Slash commands (explicit invocation)
+│   ├── d365-new-*.md              # Create new D365 artifacts
+│   ├── d365-extend-*.md           # Extend existing D365 artifacts
+│   ├── d365-batch-job.md          # Batch processing
+│   ├── d365-security.md           # Security model
+│   ├── d365-create-docs.md        # Documentation generation
+│   ├── d365-fix-encoding.md       # Utility
+│   ├── cb-agent.md                # ADO integration
+│   └── D365-SKILLS-README.md      # Slash command reference
+└── skills/                        # Auto-triggering skills (context-loaded)
+    ├── cb-voice/SKILL.md          # Brand voice & tone for customer-facing writing
+    ├── cb-brand/SKILL.md          # Visual identity tokens & component patterns
+    └── docx-survival/SKILL.md     # `docx` npm package gotchas
 ```
 
 ## Requirements
