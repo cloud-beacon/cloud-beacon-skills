@@ -47,6 +47,10 @@ sharp(src).extend({ top, bottom, background: { r:255,g:255,b:255 } })  // comput
 // set RGB to target, keep alpha for antialiasing.
 ```
 
+**Background replacement on photos** (headshots/product shots onto a flat
+brand color): do NOT threshold/flood-fill — use the ML segmentation recipe in
+the `cb-photo-background` skill.
+
 Naming: `<slug>-<width>.jpg` under `public/customers/`. Wire as
 `image: '/customers/<slug>-600.jpg'` + explicit `imageSrcSet` listing each variant with `Nw` descriptors. Above-the-fold images: `fetchPriority="high"`; below: `loading="lazy" decoding="async"`.
 
