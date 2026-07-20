@@ -26,17 +26,35 @@ set -euo pipefail
 CBCR_APP_ID="357ad426-0779-493a-a55f-e0bb3894d4b1"
 CBCR_URL="${CBCR_URL:-https://cr.cloudbeacon.com}"
 WAIT=0
+KIND="diff"
+SHELVESET=""
+CLIENT=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --wait) WAIT=1; shift ;;
+        --shelveset)
+            KIND="shelveset"
+            SHELVESET="$2"; shift 2
+            ;;
+        --client)
+            CLIENT="$2"; shift 2
+            ;;
         --help|-h)
             cat <<USAGE
-usage: submit.sh [--wait] < diff.patch
+usage: submit.sh [--wait] [< diff.patch]
+       submit.sh --shelveset "<name>;<owner>" --client <client-id> [--wait]
 
-Reads a unified diff from stdin, submits it to the cbcr endpoint, and
-prints the job_id. With --wait, polls the endpoint until the job
-reaches a terminal state (done|failed).
+Diff mode (default): read a unified diff from stdin, submit to the
+cbcr endpoint, print the job_id.
+
+Shelveset mode: reference a TFVC shelveset by name+owner. The endpoint's
+worker uses tfvc_review.py to fetch the shelveset from Azure DevOps and
+review it against the client's naming/framework profile. --client picks
+which clients/<id>.json profile the fetcher uses (must exist on the VM).
+
+With --wait, polls the endpoint until the job reaches a terminal state
+(done|failed).
 
 Requires: az CLI signed in to the Cloud Beacon tenant, plus one of
 jq / node / python3 / python / py for JSON assembly.
@@ -46,6 +64,20 @@ USAGE
         *) echo "unknown arg: $1" >&2; exit 2 ;;
     esac
 done
+
+if [ "$KIND" = "shelveset" ]; then
+    if [ -z "$SHELVESET" ] || [ -z "$CLIENT" ]; then
+        echo "error: --shelveset and --client are both required in shelveset mode" >&2
+        exit 2
+    fi
+    # Split "name;owner"
+    SHELVESET_NAME="${SHELVESET%;*}"
+    SHELVESET_OWNER="${SHELVESET#*;}"
+    if [ "$SHELVESET_NAME" = "$SHELVESET" ] || [ -z "$SHELVESET_NAME" ] || [ -z "$SHELVESET_OWNER" ]; then
+        echo "error: --shelveset must be in the form <name>;<owner>" >&2
+        exit 2
+    fi
+fi
 
 # --- 1. Preflight ---------------------------------------------------------
 
@@ -59,14 +91,16 @@ if ! command -v curl >/dev/null 2>&1; then
     exit 3
 fi
 
-# --- 2. Diff from stdin ---------------------------------------------------
+# --- 2. Collect the input (diff from stdin, or shelveset ref) -------------
 
-DIFF=$(cat)
-DIFF_BYTES=${#DIFF}
-if [ "$DIFF_BYTES" -eq 0 ]; then
-    echo "error: no diff on stdin. Pipe a unified diff, e.g.:" >&2
-    echo "  git diff HEAD | submit.sh" >&2
-    exit 4
+if [ "$KIND" = "diff" ]; then
+    DIFF=$(cat)
+    DIFF_BYTES=${#DIFF}
+    if [ "$DIFF_BYTES" -eq 0 ]; then
+        echo "error: no diff on stdin. Pipe a unified diff, e.g.:" >&2
+        echo "  git diff HEAD | submit.sh" >&2
+        exit 4
+    fi
 fi
 
 # --- 3. Token acquisition -------------------------------------------------
@@ -88,22 +122,42 @@ TOKEN=$(az account get-access-token \
 # Probe encoders in order of preference. Windows Store stubs for python*
 # print a "Python was not found" line to stderr but exit 49 — treat any
 # non-zero exit as "not really there" and fall through.
-encode_diff() {
-    if command -v jq >/dev/null 2>&1; then
-        printf '%s' "$DIFF" | jq -Rs '{diff: .}' && return 0
-    fi
-    if command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1; then
-        printf '%s' "$DIFF" | node -e 'process.stdout.write(JSON.stringify({diff: require("fs").readFileSync(0,"utf8")}))' && return 0
-    fi
-    for py in python3 python "py -3" py; do
-        if $py --version >/dev/null 2>&1; then
-            printf '%s' "$DIFF" | $py -c 'import json,sys;sys.stdout.write(json.dumps({"diff":sys.stdin.read()}))' && return 0
+#
+# For diff payloads the diff comes from stdin (streaming). For shelveset
+# payloads the whole thing is small enough to pass as env vars.
+build_payload() {
+    if [ "$KIND" = "diff" ]; then
+        if command -v jq >/dev/null 2>&1; then
+            printf '%s' "$DIFF" | jq -Rs '{diff: .}' && return 0
         fi
-    done
+        if command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1; then
+            printf '%s' "$DIFF" | node -e 'process.stdout.write(JSON.stringify({diff: require("fs").readFileSync(0,"utf8")}))' && return 0
+        fi
+        for py in python3 python "py -3" py; do
+            if $py --version >/dev/null 2>&1; then
+                printf '%s' "$DIFF" | $py -c 'import json,sys;sys.stdout.write(json.dumps({"diff":sys.stdin.read()}))' && return 0
+            fi
+        done
+    else
+        # Shelveset: env-var pass. Simple and doesn't need stdin trickery.
+        export CBCR_NAME="$SHELVESET_NAME" CBCR_OWNER="$SHELVESET_OWNER" CBCR_CLIENT="$CLIENT"
+        if command -v jq >/dev/null 2>&1; then
+            jq -n --arg n "$CBCR_NAME" --arg o "$CBCR_OWNER" --arg c "$CBCR_CLIENT" \
+                '{kind:"shelveset", shelveset_name:$n, shelveset_owner:$o, client:$c}' && return 0
+        fi
+        if command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1; then
+            node -e 'process.stdout.write(JSON.stringify({kind:"shelveset", shelveset_name:process.env.CBCR_NAME, shelveset_owner:process.env.CBCR_OWNER, client:process.env.CBCR_CLIENT}))' && return 0
+        fi
+        for py in python3 python "py -3" py; do
+            if $py --version >/dev/null 2>&1; then
+                $py -c 'import json,os,sys;sys.stdout.write(json.dumps({"kind":"shelveset","shelveset_name":os.environ["CBCR_NAME"],"shelveset_owner":os.environ["CBCR_OWNER"],"client":os.environ["CBCR_CLIENT"]}))' && return 0
+            fi
+        done
+    fi
     return 1
 }
 
-PAYLOAD=$(encode_diff) || {
+PAYLOAD=$(build_payload) || {
     echo "error: no working JSON encoder found (tried jq, node, python3, python, py -3)" >&2
     echo "  install one:  choco install jq   |   winget install OpenJS.NodeJS" >&2
     exit 6
@@ -156,9 +210,13 @@ DEDUP=$(json_field dedup  "$RESP_BODY" "false")
 
 echo "Submitted."
 echo "  job:  $JOB_ID"
-echo "  size: $DIFF_BYTES bytes"
+if [ "$KIND" = "diff" ]; then
+    echo "  kind: diff (${DIFF_BYTES} bytes)"
+else
+    echo "  kind: shelveset ${SHELVESET_NAME};${SHELVESET_OWNER} (client=${CLIENT})"
+fi
 if [ "$DEDUP" = "true" ]; then
-    echo "  note: identical diff already in queue; showing existing job."
+    echo "  note: same submission already in queue; showing existing job."
 fi
 echo
 echo "The review report will arrive by email (from cdalton@cloudbeacon.dev,"

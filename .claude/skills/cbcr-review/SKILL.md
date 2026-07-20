@@ -1,14 +1,17 @@
 ---
 name: cbcr-review
-description: Submit the developer's current working diff to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "run this by the CR bot", or similar phrasing about getting feedback on their working diff *before* opening a formal code-review request in Azure DevOps.
+description: Submit the developer's working changes to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. Accepts either a raw diff (git or TFVC) OR a named TFVC shelveset (fetched from Azure DevOps and reviewed against the client's profile). The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "review shelveset FooChange", "run this by the CR bot", or similar phrasing about getting feedback on working changes *before* opening a formal code-review request in Azure DevOps.
 ---
 
 # /cbcr-review — pre-submit code review
 
-Submits the developer's current diff to `https://cr.cloudbeacon.com/review`.
-The endpoint validates the caller's Entra ID token, enqueues the diff, and
-emails the report back to the developer whose token was used. Report format
-matches `/cr-review` (verdict, findings by severity, what looks good).
+Submits the developer's changes to `https://cr.cloudbeacon.com/review` for
+review before they formalize a code-review request in ADO. Two submission
+modes: **diff** (raw unified diff from stdin — git or TFVC working state)
+and **shelveset** (name+owner reference; the endpoint fetches from ADO
+using the client's stored PAT). Report emails back to the developer whose
+token was used. Format matches `/cr-review` (verdict, spec conformance
+if applicable, findings by severity, what looks good).
 
 ## When to invoke
 
@@ -35,30 +38,55 @@ matches `/cr-review` (verdict, findings by severity, what looks good).
    and stop. If the tenant domain isn't `cloudbeacon.dev`, tell them to
    `az account set --subscription <cloudbeacon-sub>` and stop.
 
-2. **Collect the diff.** In priority order:
-   - If the user pasted a diff in-chat, use it verbatim.
-   - Otherwise, detect the VCS in the current working directory:
-     - **Git**: `git diff HEAD` (staged + unstaged vs HEAD). If that's
-       empty, try `git diff origin/HEAD` (branch vs main). If still empty,
-       stop and tell the user "no diff to review".
-     - **TFVC** (`tf.exe` on PATH, or a metadata folder that looks like
-       AX/D365 tooling): `tf.exe diff /format:unified /recursive` from the
-       workspace root. If empty, stop.
-     - **Neither**: ask the user to paste a unified diff or `cd` into a
-       repo with pending changes.
+2. **Decide the submission mode.**
 
-3. **Sanity-check the scope.** Show the user a one-line summary:
+   **Shelveset mode** — use when the user names a specific TFVC shelveset:
+   phrases like "review shelveset FooChange", "review shelveset FooChange
+   owned by cbcdev@buddig.com", "review my pending Buddig shelveset". The
+   endpoint fetches the shelveset from Azure DevOps and applies the
+   client's naming/framework profile.
+   - Need three inputs: shelveset name, shelveset owner (defaults to the
+     user's ADO identity if not given), client id (defaults to the profile
+     that matches the current repo if unambiguous — e.g. `buddig` if the
+     repo is `Buddig D365 FSC`). Ask the user to clarify anything you can't
+     infer confidently.
+   - Confirm inputs back to the user before submitting.
+
+   **Diff mode** — use when the user has working changes and no shelveset:
+   - If the user pasted a diff in-chat, use it verbatim.
+   - Otherwise detect the VCS in the current working directory:
+     - **Git**: `git diff HEAD` (staged + unstaged vs HEAD). If empty, try
+       `git diff origin/HEAD` (branch vs main). If still empty, stop and
+       tell the user "no diff to review".
+     - **TFVC** without a specific shelveset in mind: `tf.exe diff
+       /format:unified /recursive` from the workspace root. If empty, stop.
+     - **Neither**: ask the user to paste a unified diff, `cd` into a repo
+       with pending changes, or provide a shelveset name.
+
+3. **Sanity-check the scope (diff mode only).** Show a one-line summary:
    `Diff: N files, +X/-Y lines. Submit?` If N is 0, stop. If the diff is
    >1 MB, warn about size and confirm. Otherwise proceed automatically.
+   (Shelveset mode has no local scope check — the endpoint fetches
+   whatever's in the named shelveset.)
 
-4. **Submit.** Run:
+4. **Submit.** `${CLAUDE_PLUGIN_ROOT}` is set by Claude Code to this
+   skill's directory; fall back to `~/.claude/skills/cbcr-review` if
+   unset. Add `--wait` if the user asked for synchronous behavior ("wait
+   for the report", "poll until done").
+
+   **Diff mode:**
    ```bash
-   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh"
+   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh" [--wait]
    ```
-   piping the diff to stdin. Add `--wait` if the user asked for
-   synchronous behavior (e.g., "wait for the report", "poll until done").
-   `${CLAUDE_PLUGIN_ROOT}` is set by Claude Code to this skill's directory;
-   fall back to `~/.claude/skills/cbcr-review` if it's not set.
+   piping the collected diff to stdin.
+
+   **Shelveset mode:**
+   ```bash
+   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh" \
+     --shelveset "<name>;<owner>" \
+     --client <client-id> [--wait]
+   ```
+   The shelveset spec is a single `name;owner` string (semicolon-joined).
 
 5. **Report back.** Parse `submit.sh`'s output:
    - Success (exit 0): show the developer the job id and note
