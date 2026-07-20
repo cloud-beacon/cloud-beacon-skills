@@ -1,17 +1,18 @@
 ---
 name: cbcr-review
-description: Submit the developer's working changes to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. Accepts either a raw diff (git or TFVC) OR a named TFVC shelveset (fetched from Azure DevOps and reviewed against the client's profile). The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "review shelveset FooChange", "run this by the CR bot", or similar phrasing about getting feedback on working changes *before* opening a formal code-review request in Azure DevOps.
+description: Submit the developer's working changes to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. Accepts three shapes — a raw diff (git or TFVC), a named TFVC shelveset (fetched from Azure DevOps), or an Azure DevOps Git PR URL (shallow-cloned + diffed). The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "review shelveset FooChange", "review PR 42", "run this by the CR bot", or similar phrasing about getting feedback on working changes *before* opening a formal code-review request in Azure DevOps.
 ---
 
 # /cbcr-review — pre-submit code review
 
 Submits the developer's changes to `https://cr.cloudbeacon.com/review` for
-review before they formalize a code-review request in ADO. Two submission
-modes: **diff** (raw unified diff from stdin — git or TFVC working state)
-and **shelveset** (name+owner reference; the endpoint fetches from ADO
-using the client's stored PAT). Report emails back to the developer whose
-token was used. Format matches `/cr-review` (verdict, spec conformance
-if applicable, findings by severity, what looks good).
+review before they formalize a code-review request in ADO. Three submission
+modes: **diff** (raw unified diff from stdin — git or TFVC working state),
+**shelveset** (TFVC name+owner reference — endpoint fetches from ADO), and
+**PR** (Azure DevOps Git PR URL — endpoint shallow-clones + diffs the two
+merge commits). Report emails back to the developer whose token was used.
+Format matches `/cr-review` (verdict, spec conformance if applicable,
+findings by severity, what looks good).
 
 ## When to invoke
 
@@ -52,7 +53,18 @@ if applicable, findings by severity, what looks good).
      infer confidently.
    - Confirm inputs back to the user before submitting.
 
-   **Diff mode** — use when the user has working changes and no shelveset:
+   **PR mode** — use when the user references an Azure DevOps Git PR URL
+   or number: phrases like "review PR 42", "review this PR
+   https://dev.azure.com/.../_git/repo/pullrequest/123", "run this PR
+   through cbcr". The endpoint shallow-clones the repo, generates the
+   diff between the PR's base and head commits, and resolves any linked
+   work items as the spec.
+   - Need two inputs: the full PR URL and the client id whose profile
+     lists the ADO host in `ado_org_hosts` and has a PAT that can read
+     the repo. If the user gives just "PR 42", ask which repo/org.
+   - Confirm both back to the user before submitting.
+
+   **Diff mode** — use when the user has working changes and no shelveset/PR:
    - If the user pasted a diff in-chat, use it verbatim.
    - Otherwise detect the VCS in the current working directory:
      - **Git**: `git diff HEAD` (staged + unstaged vs HEAD). If empty, try
@@ -87,6 +99,14 @@ if applicable, findings by severity, what looks good).
      --client <client-id> [--wait]
    ```
    The shelveset spec is a single `name;owner` string (semicolon-joined).
+
+   **PR mode:**
+   ```bash
+   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh" \
+     --pr "<ado-git-pr-url>" \
+     --client <client-id> [--wait]
+   ```
+   The PR URL is the browser URL of the Azure DevOps pull request.
 
 5. **Report back.** Parse `submit.sh`'s output:
    - Success (exit 0): show the developer the job id and note

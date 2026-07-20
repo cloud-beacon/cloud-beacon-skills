@@ -28,6 +28,7 @@ CBCR_URL="${CBCR_URL:-https://cr.cloudbeacon.com}"
 WAIT=0
 KIND="diff"
 SHELVESET=""
+PR_URL=""
 CLIENT=""
 
 while [ $# -gt 0 ]; do
@@ -37,6 +38,10 @@ while [ $# -gt 0 ]; do
             KIND="shelveset"
             SHELVESET="$2"; shift 2
             ;;
+        --pr)
+            KIND="pr"
+            PR_URL="$2"; shift 2
+            ;;
         --client)
             CLIENT="$2"; shift 2
             ;;
@@ -44,17 +49,26 @@ while [ $# -gt 0 ]; do
             cat <<USAGE
 usage: submit.sh [--wait] [< diff.patch]
        submit.sh --shelveset "<name>;<owner>" --client <client-id> [--wait]
+       submit.sh --pr <ado-git-pr-url>        --client <client-id> [--wait]
 
 Diff mode (default): read a unified diff from stdin, submit to the
 cbcr endpoint, print the job_id.
 
 Shelveset mode: reference a TFVC shelveset by name+owner. The endpoint's
-worker uses tfvc_review.py to fetch the shelveset from Azure DevOps and
-review it against the client's naming/framework profile. --client picks
-which clients/<id>.json profile the fetcher uses (must exist on the VM).
+worker uses tfvc_review.py to fetch from Azure DevOps and review it
+against the client's naming/framework profile.
 
-With --wait, polls the endpoint until the job reaches a terminal state
-(done|failed).
+PR mode: reference an Azure DevOps Git PR by URL (like
+  https://dev.azure.com/<org>/<proj>/_git/<repo>/pullrequest/<n>
+or
+  https://<org>.visualstudio.com/<proj>/_git/<repo>/pullrequest/<n>).
+The endpoint's worker uses git_review.py: shallow-clones the repo,
+computes the diff between base and head, resolves linked work items.
+
+--client picks which clients/<id>.json profile the fetcher uses
+(must exist on the VM; provides the ADO host allowlist + PAT).
+
+With --wait, polls until the job reaches a terminal state (done|failed).
 
 Requires: az CLI signed in to the Cloud Beacon tenant, plus one of
 jq / node / python3 / python / py for JSON assembly.
@@ -75,6 +89,12 @@ if [ "$KIND" = "shelveset" ]; then
     SHELVESET_OWNER="${SHELVESET#*;}"
     if [ "$SHELVESET_NAME" = "$SHELVESET" ] || [ -z "$SHELVESET_NAME" ] || [ -z "$SHELVESET_OWNER" ]; then
         echo "error: --shelveset must be in the form <name>;<owner>" >&2
+        exit 2
+    fi
+fi
+if [ "$KIND" = "pr" ]; then
+    if [ -z "$PR_URL" ] || [ -z "$CLIENT" ]; then
+        echo "error: --pr and --client are both required in PR mode" >&2
         exit 2
     fi
 fi
@@ -138,7 +158,7 @@ build_payload() {
                 printf '%s' "$DIFF" | $py -c 'import json,sys;sys.stdout.write(json.dumps({"diff":sys.stdin.read()}))' && return 0
             fi
         done
-    else
+    elif [ "$KIND" = "shelveset" ]; then
         # Shelveset: env-var pass. Simple and doesn't need stdin trickery.
         export CBCR_NAME="$SHELVESET_NAME" CBCR_OWNER="$SHELVESET_OWNER" CBCR_CLIENT="$CLIENT"
         if command -v jq >/dev/null 2>&1; then
@@ -151,6 +171,21 @@ build_payload() {
         for py in python3 python "py -3" py; do
             if $py --version >/dev/null 2>&1; then
                 $py -c 'import json,os,sys;sys.stdout.write(json.dumps({"kind":"shelveset","shelveset_name":os.environ["CBCR_NAME"],"shelveset_owner":os.environ["CBCR_OWNER"],"client":os.environ["CBCR_CLIENT"]}))' && return 0
+            fi
+        done
+    else
+        # PR: env-var pass, same pattern.
+        export CBCR_PR_URL="$PR_URL" CBCR_CLIENT="$CLIENT"
+        if command -v jq >/dev/null 2>&1; then
+            jq -n --arg u "$CBCR_PR_URL" --arg c "$CBCR_CLIENT" \
+                '{kind:"pr", pr_url:$u, client:$c}' && return 0
+        fi
+        if command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1; then
+            node -e 'process.stdout.write(JSON.stringify({kind:"pr", pr_url:process.env.CBCR_PR_URL, client:process.env.CBCR_CLIENT}))' && return 0
+        fi
+        for py in python3 python "py -3" py; do
+            if $py --version >/dev/null 2>&1; then
+                $py -c 'import json,os,sys;sys.stdout.write(json.dumps({"kind":"pr","pr_url":os.environ["CBCR_PR_URL"],"client":os.environ["CBCR_CLIENT"]}))' && return 0
             fi
         done
     fi
@@ -210,11 +245,11 @@ DEDUP=$(json_field dedup  "$RESP_BODY" "false")
 
 echo "Submitted."
 echo "  job:  $JOB_ID"
-if [ "$KIND" = "diff" ]; then
-    echo "  kind: diff (${DIFF_BYTES} bytes)"
-else
-    echo "  kind: shelveset ${SHELVESET_NAME};${SHELVESET_OWNER} (client=${CLIENT})"
-fi
+case "$KIND" in
+    diff)      echo "  kind: diff (${DIFF_BYTES} bytes)" ;;
+    shelveset) echo "  kind: shelveset ${SHELVESET_NAME};${SHELVESET_OWNER} (client=${CLIENT})" ;;
+    pr)        echo "  kind: pr ${PR_URL} (client=${CLIENT})" ;;
+esac
 if [ "$DEDUP" = "true" ]; then
     echo "  note: same submission already in queue; showing existing job."
 fi
