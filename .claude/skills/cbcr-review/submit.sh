@@ -30,10 +30,14 @@ KIND="diff"
 SHELVESET=""
 PR_URL=""
 CLIENT=""
+WORKITEM=""
 
 while [ $# -gt 0 ]; do
     case "$1" in
         --wait) WAIT=1; shift ;;
+        --workitem)
+            WORKITEM="$2"; shift 2
+            ;;
         --shelveset)
             KIND="shelveset"
             SHELVESET="$2"; shift 2
@@ -47,12 +51,16 @@ while [ $# -gt 0 ]; do
             ;;
         --help|-h)
             cat <<USAGE
-usage: submit.sh [--wait] [< diff.patch]
+usage: submit.sh [--wait] [--workitem <id> --client <client-id>] [< diff.patch]
        submit.sh --shelveset "<name>;<owner>" --client <client-id> [--wait]
        submit.sh --pr <ado-git-pr-url>        --client <client-id> [--wait]
 
 Diff mode (default): read a unified diff from stdin, submit to the
-cbcr endpoint, print the job_id.
+cbcr endpoint, print the job_id. Optionally pass --workitem <id> (with
+--client) to have the review verify the diff against that ADO work
+item's spec — without it, the review is framework-only. Shelveset and
+PR modes resolve the linked work item automatically; --workitem is
+diff-mode only.
 
 Shelveset mode: reference a TFVC shelveset by name+owner. The endpoint's
 worker uses tfvc_review.py to fetch from Azure DevOps and review it
@@ -95,6 +103,19 @@ fi
 if [ "$KIND" = "pr" ]; then
     if [ -z "$PR_URL" ] || [ -z "$CLIENT" ]; then
         echo "error: --pr and --client are both required in PR mode" >&2
+        exit 2
+    fi
+fi
+if [ -n "$WORKITEM" ]; then
+    if [ "$KIND" != "diff" ]; then
+        echo "error: --workitem is diff-mode only (shelveset/PR resolve the linked work item automatically)" >&2
+        exit 2
+    fi
+    case "$WORKITEM" in
+        ''|*[!0-9]*) echo "error: --workitem must be a numeric ADO work item id" >&2; exit 2 ;;
+    esac
+    if [ -z "$CLIENT" ]; then
+        echo "error: --workitem requires --client (names the profile whose PAT reads the work item)" >&2
         exit 2
     fi
 fi
@@ -147,15 +168,23 @@ TOKEN=$(az account get-access-token \
 # payloads the whole thing is small enough to pass as env vars.
 build_payload() {
     if [ "$KIND" = "diff" ]; then
+        # CBCR_WI / CBCR_CLIENT are exported (possibly empty) so every
+        # encoder can add the optional spec fields without shell quoting.
+        export CBCR_WI="$WORKITEM" CBCR_CLIENT="$CLIENT"
         if command -v jq >/dev/null 2>&1; then
-            printf '%s' "$DIFF" | jq -Rs '{diff: .}' && return 0
+            printf '%s' "$DIFF" | jq -Rs '{kind: "diff", diff: .}
+                + (if (env.CBCR_WI // "") != "" then {workitem: env.CBCR_WI, client: env.CBCR_CLIENT} else {} end)' && return 0
         fi
         if command -v node >/dev/null 2>&1 && node --version >/dev/null 2>&1; then
-            printf '%s' "$DIFF" | node -e 'process.stdout.write(JSON.stringify({diff: require("fs").readFileSync(0,"utf8")}))' && return 0
+            printf '%s' "$DIFF" | node -e 'const d={kind:"diff",diff:require("fs").readFileSync(0,"utf8")};if(process.env.CBCR_WI){d.workitem=process.env.CBCR_WI;d.client=process.env.CBCR_CLIENT;}process.stdout.write(JSON.stringify(d))' && return 0
         fi
         for py in python3 python "py -3" py; do
             if $py --version >/dev/null 2>&1; then
-                printf '%s' "$DIFF" | $py -c 'import json,sys;sys.stdout.write(json.dumps({"diff":sys.stdin.read()}))' && return 0
+                printf '%s' "$DIFF" | $py -c 'import json,os,sys
+d={"kind":"diff","diff":sys.stdin.read()}
+if os.environ.get("CBCR_WI"):
+    d["workitem"]=os.environ["CBCR_WI"];d["client"]=os.environ["CBCR_CLIENT"]
+sys.stdout.write(json.dumps(d))' && return 0
             fi
         done
     elif [ "$KIND" = "shelveset" ]; then
@@ -246,7 +275,13 @@ DEDUP=$(json_field dedup  "$RESP_BODY" "false")
 echo "Submitted."
 echo "  job:  $JOB_ID"
 case "$KIND" in
-    diff)      echo "  kind: diff (${DIFF_BYTES} bytes)" ;;
+    diff)
+        if [ -n "$WORKITEM" ]; then
+            echo "  kind: diff (${DIFF_BYTES} bytes), verify against WI ${WORKITEM} (client=${CLIENT})"
+        else
+            echo "  kind: diff (${DIFF_BYTES} bytes), framework-only"
+        fi
+        ;;
     shelveset) echo "  kind: shelveset ${SHELVESET_NAME};${SHELVESET_OWNER} (client=${CLIENT})" ;;
     pr)        echo "  kind: pr ${PR_URL} (client=${CLIENT})" ;;
 esac

@@ -74,6 +74,14 @@ findings by severity, what looks good).
        /format:unified /recursive` from the workspace root. If empty, stop.
      - **Neither**: ask the user to paste a unified diff, `cd` into a repo
        with pending changes, or provide a shelveset name.
+   - **Optional spec verification**: if the user names an ADO work item
+     ("review against WI 2538", "verify against ADO 1162", "check it
+     covers task 2408"), pass `--workitem <id> --client <client-id>` so
+     the review traces the diff against that work item's spec instead of
+     being framework-only. The client id names the `clients/<id>.json`
+     profile whose PAT can read the work item — ask which client if you
+     can't infer it. Never guess a work item id from branch names or
+     commit messages; only pass one the user explicitly named.
 
 3. **Sanity-check the scope (diff mode only).** Show a one-line summary:
    `Diff: N files, +X/-Y lines. Submit?` If N is 0, stop. If the diff is
@@ -88,9 +96,10 @@ findings by severity, what looks good).
 
    **Diff mode:**
    ```bash
-   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh" [--wait]
+   bash "${CLAUDE_PLUGIN_ROOT}/submit.sh" [--wait] [--workitem <id> --client <client-id>]
    ```
-   piping the collected diff to stdin.
+   piping the collected diff to stdin. `--workitem` is diff-mode only
+   (shelveset/PR resolve the linked work item automatically).
 
    **Shelveset mode:**
    ```bash
