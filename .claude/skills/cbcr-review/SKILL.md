@@ -16,7 +16,8 @@ findings by severity, what looks good).
 
 ## When to invoke
 
-- User runs `/cbcr-review` or `/cbcr`.
+- User runs `/cbcr-review`, `/cbcr`, or `/cr` (the `cr` alias skill
+  delegates here).
 - User asks for a pre-submit review, self-review, or feedback on their
   working diff *before* they open a formal Azure DevOps code-review request.
 - User pastes a diff and says "review this before I submit" or similar.
