@@ -1,6 +1,6 @@
 ---
 name: cbcr-review
-description: Submit the developer's working changes to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. Accepts three shapes — a raw diff (git or TFVC), a named TFVC shelveset (fetched from Azure DevOps), or an Azure DevOps Git PR URL (shallow-cloned + diffed). The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "review shelveset FooChange", "review PR 42", "run this by the CR bot", or similar phrasing about getting feedback on working changes *before* opening a formal code-review request in Azure DevOps.
+description: Submit the developer's working changes to Cloud Beacon's pre-submit review endpoint (cr.cloudbeacon.com) for automated X++ code review against the xpp-code-review framework. Accepts three shapes — a raw diff (git or TFVC), a named TFVC shelveset (fetched from Azure DevOps), or an Azure DevOps Git PR URL (shallow-cloned + diffed). The report arrives by email in 1-2 minutes. Trigger on `/cbcr-review`, `/cbcr`, `/cr`, or when the user asks for a pre-submit review, self-review, "review my changes before I submit", "review shelveset FooChange", "review PR 42", "run this by the CR bot", or similar phrasing about getting feedback on working changes *before* opening a formal code-review request in Azure DevOps.
 ---
 
 # /cbcr-review — pre-submit code review
