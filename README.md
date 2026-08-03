@@ -50,6 +50,7 @@ Skills load automatically when their description matches the context — no comm
 | `cb-voice` | "rewrite in CB voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
 | `cb-brand` | Styling any CB-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Visual identity — exact color palette, typography, spacing, and component patterns |
 | `docx-survival` | `import { ... } from 'docx'`, building DOCX exporters, "Word found unreadable content" debugging | Hard-won gotchas for the `docx` npm package (v9) — image type, SVG handling, TextRun pitfalls, hyperlink bug |
+| `client-proposal` | "create a proposal for \<client\>", turning a scope email into a sendable proposal link | Client-branded single-page web proposal (LCA-style editorial layout, client-color theming, Vercel deploy); bundles the Shamrock proposal as reference implementation |
 
 ### D365 Finance & Operations
 
