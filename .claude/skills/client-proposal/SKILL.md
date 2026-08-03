@@ -38,8 +38,9 @@ the buyer *reads* instead of a deck they skim. Two separable layers:
   name/title for the footer.
 - **Commercials** — rate(s), estimated hours per workstream, envelope (min–max hours).
   Confirm with the user if not stated; never invent a rate.
-- **Cloud Beacon boilerplate** — billing terms come from a recent SOW (T&M, monthly in
-  arrears, detailed timesheets, reporting vs estimate); footer address
+- **Cloud Beacon boilerplate** — billing is **biweekly** in arrears (T&M, detailed
+  timesheets, reporting vs estimate) — note some older SOWs say monthly; biweekly is
+  current. Footer address
   `4741 Central St Ste 500, Kansas City, MO 64112`, `www.cloudbeacon.com`,
   contacts `cdalton@cloudbeacon.com` (escalations) and `accounting@cloudbeacon.com`
   (billing). Stats for "Why Cloud Beacon": 20+ **average** years in D365/AX (not "20 years"),
