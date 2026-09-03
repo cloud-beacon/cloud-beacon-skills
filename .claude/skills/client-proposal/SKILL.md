@@ -83,6 +83,20 @@ serif accents, monospace uppercase for eyebrows/labels. No webfont downloads.
   follow in a Statement of Work."
 - Client-facing names lead: "<Client> × Cloud Beacon" in title/h1, client logo first
   in every lockup.
+- **American English, always.** Every client-facing word uses US spelling and usage —
+  recognize, normalize, synchronization, behavior, fulfillment, customization, analyze,
+  center, canceled, gray, license (noun and verb). No British, Australian or Canadian
+  forms, and no exceptions for a client owned by a non-US parent. This holds even when
+  the source document, transcript or client email uses a British form: adapt it.
+  Sweep before deploying:
+
+  ```
+  grep -nE "\b[A-Za-z]+is(e|ed|es|ing|ation)\b|behaviour|colour|favour|fulfilment|licence|centre|metre|analys|modelling|travelling|cancelled|grey|programme|whilst|amongst" index.html
+  ```
+
+  Ignore the legitimate `-ise` words the pattern catches: advertise, comprise,
+  compromise, devise, exercise, franchise, otherwise, promise, revise, supervise,
+  surprise, wise.
 
 ## Assets (logos / favicon)
 
@@ -114,3 +128,4 @@ but see the deploy warning below.
 4. Footer: CB address/contacts + "Prepared for" with the client contact's name & title.
 5. Deployment READY and URL returns 200; hard-refresh note for favicon caching.
 6. Anything the client already saw (deck, prior email) echoed, not contradicted.
+7. American-English sweep run and clean (see Copy rules).
