@@ -401,7 +401,7 @@ After deploying, users must run the number sequence wizard:
 
 1. Go to **Organization administration > Number sequences > Number sequences**
 2. Click **Generate** button
-3. Select your module (CloudBeacon)
+3. Select your module (Alta Beacon)
 4. Follow the wizard to create sequence codes
 5. Go to your parameters form to assign the sequences
 
@@ -468,7 +468,7 @@ TemplateIdHelp=Unique identifier for the template
  ;EDT help text
 TemplateIdNumSeqHelp=Number sequence for generating template IDs
  ;Number sequence reference help
-ModuleName=Cloud Beacon
+ModuleName=Alta Beacon
  ;Module name for number sequence setup
 NumSeqNotConfigured=Number sequence for Template ID is not configured. Please set up number sequences in parameters.
  ;Error when number sequence not configured

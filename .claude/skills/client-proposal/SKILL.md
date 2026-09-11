@@ -1,6 +1,6 @@
 ---
 name: client-proposal
-description: Build and deploy a client-branded, single-page web proposal in Cloud Beacon's editorial house style (LCA-inspired — numbered narrative sections, italic serif accents in the client's brand color, scroll-reveal). Takes a scope source (client email, meeting notes, or SOW draft), skins the page in the client's own branding pulled from their website, and ships it to Vercel at <client>-cloudbeacon-proposal.vercel.app. Trigger on "create a proposal for <client>", "build a web proposal", "proposal page like the Shamrock one", or when the user wants to turn a scope email into a sendable proposal link.
+description: Build and deploy a client-branded, single-page web proposal in Alta Beacon's editorial house style (LCA-inspired — numbered narrative sections, italic serif accents in the client's brand color, scroll-reveal). Takes a scope source (client email, meeting notes, or SOW draft), skins the page in the client's own branding pulled from their website, and ships it to Vercel at <client>-cloudbeacon-proposal.vercel.app. Trigger on "create a proposal for <client>", "build a web proposal", "proposal page like the Shamrock one", or when the user wants to turn a scope email into a sendable proposal link.
 ---
 
 # Client Proposal — branded web proposal generator
@@ -20,12 +20,12 @@ the buyer *reads* instead of a deck they skim. Two separable layers:
 
 1. **Structure** (always keep): sticky logo lockup header + scroll progress bar, hero with
    big headline, meta strip (Prepared for / Engagement / Start / Focus), then numbered
-   sections 01–07: Opportunity → Engagement → Plan → Team → Why Cloud Beacon →
+   sections 01–07: Opportunity → Engagement → Plan → Team → Why Alta Beacon →
    Investment → Next steps. Dark brand footer with contacts.
 2. **Skin** (always the client's): the page is themed in the *client's* brand colors, not
-   Cloud Beacon's. That is the LCA move — their Spotify proposal is Spotify green.
-   It makes the proposal feel bespoke; Cloud Beacon presence is carried by the logo,
-   the "Why Cloud Beacon" section, and the footer.
+   Alta Beacon's. That is the LCA move — their Spotify proposal is Spotify green.
+   It makes the proposal feel bespoke; Alta Beacon presence is carried by the logo,
+   the "Why Alta Beacon" section, and the footer.
 
 ## Inputs to collect before building
 
@@ -38,12 +38,12 @@ the buyer *reads* instead of a deck they skim. Two separable layers:
   name/title for the footer.
 - **Commercials** — rate(s), estimated hours per workstream, envelope (min–max hours).
   Confirm with the user if not stated; never invent a rate.
-- **Cloud Beacon boilerplate** — billing is **biweekly** in arrears (T&M, detailed
+- **Alta Beacon boilerplate** — billing is **biweekly** in arrears (T&M, detailed
   timesheets, reporting vs estimate) — note some older SOWs say monthly; biweekly is
   current. Footer address
   `4741 Central St Ste 500, Kansas City, MO 64112`, `www.cloudbeacon.com`,
   contacts `cdalton@cloudbeacon.com` (escalations) and `accounting@cloudbeacon.com`
-  (billing). Stats for "Why Cloud Beacon": 20+ **average** years in D365/AX (not "20 years"),
+  (billing). Stats for "Why Alta Beacon": 20+ **average** years in D365/AX (not "20 years"),
   80+ projects, 100% go-live success, F&B home industry. Delivery-model language comes
   from the "Cloud Beacon F&B Customer Success" deck: "Accountability stays. Capacity
   scales.", nearshore = Central & South America on client business hours, honesty
@@ -81,7 +81,7 @@ serif accents, monospace uppercase for eyebrows/labels. No webfont downloads.
 - Investment: big rate figure, small table (estimate + envelope with dollar math),
   checkmark grid of what's included, fine print with billing terms, "Formal terms
   follow in a Statement of Work."
-- Client-facing names lead: "<Client> × Cloud Beacon" in title/h1, client logo first
+- Client-facing names lead: "<Client> × Alta Beacon" in title/h1, client logo first
   in every lockup.
 - **American English, always.** Every client-facing word uses US spelling and usage —
   recognize, normalize, synchronization, behavior, fulfillment, customization, analyze,
@@ -101,7 +101,9 @@ serif accents, monospace uppercase for eyebrows/labels. No webfont downloads.
 ## Assets (logos / favicon)
 
 Hotlink the client's logo and favicon from their own site (pixel-identical, zero upload)
-and the Cloud Beacon logo from `https://dynamicschad.com/assets/logo.png`. Add the
+and the Alta Beacon logo from `https://dynamicschad.com/assets/logo.png` (the
+official lockups also ship in the `cb-brand` skill's `assets/` folder — use
+`alta-beacon.svg` on light backgrounds, `alta-beacon-reversed.svg` on dark). Add the
 client's real favicon `<link rel="icon">` tags copied from their homepage head. If the
 user wants the page self-contained, inline the images as base64 data URIs instead —
 but see the deploy warning below.
@@ -125,7 +127,7 @@ but see the deploy warning below.
 1. Scope, hours, rate, start window confirmed against source. Dollar math checked.
 2. Client logo first in lockups; client-first naming everywhere; client favicon.
 3. All four token blocks re-skinned (light + dark + both data-theme mirrors).
-4. Footer: CB address/contacts + "Prepared for" with the client contact's name & title.
+4. Footer: Alta Beacon address/contacts + "Prepared for" with the client contact's name & title.
 5. Deployment READY and URL returns 200; hard-refresh note for favicon caching.
 6. Anything the client already saw (deck, prior email) echoed, not contradicted.
 7. American-English sweep run and clean (see Copy rules).

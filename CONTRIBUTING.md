@@ -1,4 +1,4 @@
-# Contributing to Cloud Beacon Skills
+# Contributing to Alta Beacon Skills
 
 This repo holds two kinds of Claude Code extensions plus shared hooks. Pick the right format, write a description that actually fires, and keep the surface area tight.
 

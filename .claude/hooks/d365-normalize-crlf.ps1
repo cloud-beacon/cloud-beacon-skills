@@ -1,4 +1,4 @@
-# Cloud Beacon: PostToolUse hook
+# Alta Beacon: PostToolUse hook
 # Normalizes line endings to CRLF on D365 F&O metadata XML files immediately
 # after Claude writes or edits them. Silently no-ops for any non-D365 file.
 #

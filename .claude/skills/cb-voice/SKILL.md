@@ -1,11 +1,11 @@
 ---
 name: cb-voice
-description: Cloud Beacon's brand voice and tone standards for customer-facing writing — proposals, SOWs, FDDs, TDDs, technical documents, reports, assessment findings, presentations, emails, and memos. Use this whenever rewriting, editing, drafting, polishing, or transforming content for a Cloud Beacon client, partner, or external audience — including when the user says "rewrite in CB voice", "make this customer-facing", "polish this for the client", "tighten this", "make this proposal-ready", or asks for help on any deliverable that will leave the company. Also trigger when transforming internal notes, meeting recaps, or developer-written drafts into external-quality prose, and when reviewing content for tone consistency with prior CB deliverables.
+description: Alta Beacon's brand voice and tone standards for customer-facing writing — proposals, SOWs, FDDs, TDDs, technical documents, reports, assessment findings, presentations, emails, and memos. Use this whenever rewriting, editing, drafting, polishing, or transforming content for an Alta Beacon client, partner, or external audience — including when the user says "rewrite in Alta Beacon voice" (or "CB voice"), "make this customer-facing", "polish this for the client", "tighten this", "make this proposal-ready", or asks for help on any deliverable that will leave the company. Also trigger when transforming internal notes, meeting recaps, or developer-written drafts into external-quality prose, and when reviewing content for tone consistency with prior Alta Beacon deliverables.
 ---
 
-# Cloud Beacon Voice & Tone
+# Alta Beacon Voice & Tone
 
-Cloud Beacon is a trusted Dynamics 365 Finance & Operations consulting partner. Writing should reflect the same qualities we bring to engagements: **precision, clarity, confident expertise.**
+Alta Beacon is a trusted Dynamics 365 Finance & Operations consulting partner. Writing should reflect the same qualities we bring to engagements: **precision, clarity, confident expertise.**
 
 ## Core voice attributes
 
@@ -19,7 +19,7 @@ Cloud Beacon is a trusted Dynamics 365 Finance & Operations consulting partner. 
 
 | Document type        | Tone                                  | Example phrasing                                          |
 | -------------------- | ------------------------------------- | --------------------------------------------------------- |
-| Proposal / SOW       | Confident, structured, contractual    | "Cloud Beacon will deliver..."                            |
+| Proposal / SOW       | Confident, structured, contractual    | "Alta Beacon will deliver..."                            |
 | Technical document   | Precise, instructional, thorough      | "The integration uses the Claim-Check pattern to..."      |
 | Email / memo         | Warm, concise, action-oriented        | "Here's what we recommend and why..."                     |
 | Presentation         | Bold, visual, high-impact             | "3 risks. 2 recommendations. 1 path forward."             |
@@ -34,7 +34,7 @@ Cloud Beacon is a trusted Dynamics 365 Finance & Operations consulting partner. 
 
 ## Language rules
 
-- **Active voice.** "Cloud Beacon will configure the system," not "The system will be configured by Cloud Beacon."
+- **Active voice.** "Alta Beacon will configure the system," not "The system will be configured by Alta Beacon."
 - **Present tense for capabilities.** "This integration handles 10,000 records per hour," not "will handle."
 - **Specific over vague.** "Reduces processing time by 40%," not "Significantly improves performance."
 - **Cut filler.** Remove "In order to" → "To." "It should be noted that" → state the thing. "At this point in time" → "Now."

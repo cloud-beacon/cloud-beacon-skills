@@ -1,12 +1,12 @@
 ---
 name: xpp-code-review
-description: Cloud Beacon's D365 Finance & Operations X++ code review framework — 19 categories of concrete, severity-rated checks (naming, performance, transactions, error handling, security, Chain of Command, labels, data entities/DMF, and more). Use this whenever reviewing, critiquing, or sanity-checking X++ or D365 F&O objects (classes, tables, forms, data entities, EDTs, enums, extension/augmentation classes), reviewing a TFVC shelveset or changeset or pull request, or even while writing or editing X++ and wanting it to conform to review standards — even if the user doesn't say the word "review". Trigger on D365 F&O, Dynamics 365 F&O, X++, AX, FinOps code quality, or "does this look right" questions about D365 objects.
+description: Alta Beacon's D365 Finance & Operations X++ code review framework — 19 categories of concrete, severity-rated checks (naming, performance, transactions, error handling, security, Chain of Command, labels, data entities/DMF, and more). Use this whenever reviewing, critiquing, or sanity-checking X++ or D365 F&O objects (classes, tables, forms, data entities, EDTs, enums, extension/augmentation classes), reviewing a TFVC shelveset or changeset or pull request, or even while writing or editing X++ and wanting it to conform to review standards — even if the user doesn't say the word "review". Trigger on D365 F&O, Dynamics 365 F&O, X++, AX, FinOps code quality, or "does this look right" questions about D365 objects.
 ---
 
 # X++ Code Review Framework — D365 F&O
 
 Apply this checklist when reviewing X++. Each category states what triggers a finding and at
-what severity. Categories 1–14 are Cloud Beacon's standards plus Microsoft D365 FO guidance;
+what severity. Categories 1–14 are Alta Beacon's standards plus Microsoft D365 FO guidance;
 15–19 cover extension-based, integration-heavy delivery. Be specific and kind: cite evidence
 as `path :: method/area`, prefer "consider X because Y" over bare verdicts, and separate
 objective violations from taste.

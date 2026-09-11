@@ -1,9 +1,9 @@
 ---
 name: cb-image-intake
-description: Intake pipeline for putting images onto Cloud Beacon web properties — download from a URL (or a repo drop), inspect visually, crop/extend with sharp, emit responsive self-hosted variants, and wire srcSet. Use whenever the user provides an image URL or file for a website/portal ("use this image for X", "can you find images for the blog posts", customer logos/photos, favicons). Also covers sourcing stock imagery and the licensing flags to raise.
+description: Intake pipeline for putting images onto Alta Beacon web properties — download from a URL (or a repo drop), inspect visually, crop/extend with sharp, emit responsive self-hosted variants, and wire srcSet. Use whenever the user provides an image URL or file for a website/portal ("use this image for X", "can you find images for the blog posts", customer logos/photos, favicons). Also covers sourcing stock imagery and the licensing flags to raise.
 ---
 
-# cb-image-intake — images onto Cloud Beacon sites
+# cb-image-intake — images onto Alta Beacon sites
 
 ## Ground rules
 
@@ -61,4 +61,4 @@ Naming: `<slug>-<width>.jpg` under `public/customers/`. Wire as
 
 ## Favicons / app icons
 
-Canonical Cloud Beacon icon set lives in `cloud-beacon-tools/portal/app/` (navy square, white mark: icon.png, apple-icon.png, favicon.ico). Copy those files; derive sizes with sharp resize (32 tab, 192 android, 180 apple-touch). Don't design new variants. Remind the user that favicons cache hard (hard refresh / private window after deploy).
+Canonical Alta Beacon icon set lives in `cloud-beacon-tools/portal/app/` (navy square, white mark: icon.png, apple-icon.png, favicon.ico). Copy those files; derive sizes with sharp resize (32 tab, 192 android, 180 apple-touch). Don't design new variants. Remind the user that favicons cache hard (hard refresh / private window after deploy).

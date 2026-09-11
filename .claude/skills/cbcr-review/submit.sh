@@ -3,7 +3,7 @@
 #
 # Auth: acquires an Entra ID bearer token via `az account get-access-token`
 # against the cbcr-service app. Azure CLI is pre-authorized on the app so
-# this works silently for any signed-in Cloud Beacon user — no interactive
+# this works silently for any signed-in Alta Beacon user — no interactive
 # prompt after the initial `az login`.
 #
 # JSON assembly: probes for jq → node → python3 → python → py -3, uses the
@@ -78,7 +78,7 @@ computes the diff between base and head, resolves linked work items.
 
 With --wait, polls until the job reaches a terminal state (done|failed).
 
-Requires: az CLI signed in to the Cloud Beacon tenant, plus one of
+Requires: az CLI signed in to the Alta Beacon tenant, plus one of
 jq / node / python3 / python / py for JSON assembly.
 USAGE
             exit 0

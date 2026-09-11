@@ -1,13 +1,13 @@
-# Cloud Beacon Skills
+# Alta Beacon Skills
 
-A collection of reusable Claude Code skills and slash commands for Cloud Beacon development, including D365 Finance & Operations, Azure, brand/voice standards, and automation workflows.
+A collection of reusable Claude Code skills and slash commands for Alta Beacon development, including D365 Finance & Operations, Azure, brand/voice standards, and automation workflows.
 
 ## Skills vs. Commands
 
 This repo contains two flavors of Claude Code extension:
 
 - **Slash commands** (`.claude/commands/*.md`) — Explicit, one-shot workflows you invoke by typing `/<name>`. Best for "do this thing now" generators (e.g. `/d365-new-table` scaffolds a new table).
-- **Skills** (`.claude/skills/<name>/SKILL.md`) — Context that auto-loads when relevant, based on the skill's `description` frontmatter. Best for reference standards and gotchas that should apply across many requests without explicit invocation (e.g. `cb-voice` fires whenever the user is editing CB-facing content).
+- **Skills** (`.claude/skills/<name>/SKILL.md`) — Context that auto-loads when relevant, based on the skill's `description` frontmatter. Best for reference standards and gotchas that should apply across many requests without explicit invocation (e.g. `cb-voice` fires whenever the user is editing Alta Beacon-facing content).
 
 ## Installation
 
@@ -43,12 +43,12 @@ Copy-Item -Path "cloud-beacon-skills\.claude\skills\*"   -Destination "$env:USER
 
 Skills load automatically when their description matches the context — no command needed.
 
-### Cloud Beacon brand & engineering
+### Alta Beacon brand & engineering
 
 | Skill | Trigger | Description |
 |-------|---------|-------------|
-| `cb-voice` | "rewrite in CB voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
-| `cb-brand` | Styling any CB-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Visual identity — exact color palette, typography, spacing, and component patterns |
+| `cb-voice` | "rewrite in Alta Beacon voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
+| `cb-brand` | Styling any Alta Beacon-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Visual identity — exact color palette, typography, spacing, and component patterns |
 | `docx-survival` | `import { ... } from 'docx'`, building DOCX exporters, "Word found unreadable content" debugging | Hard-won gotchas for the `docx` npm package (v9) — image type, SVG handling, TextRun pitfalls, hyperlink bug |
 | `client-proposal` | "create a proposal for \<client\>", turning a scope email into a sendable proposal link | Client-branded single-page web proposal (LCA-style editorial layout, client-color theming, Vercel deploy); bundles the Shamrock proposal as reference implementation |
 
@@ -199,4 +199,4 @@ MIT License - See LICENSE file for details.
 
 ## Maintainers
 
-- Cloud Beacon Development Team
+- Alta Beacon Development Team

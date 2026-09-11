@@ -1,6 +1,6 @@
 ---
 name: cr
-description: Shorthand alias for cbcr-review — submit working changes (diff, TFVC shelveset, or ADO Git PR) to Cloud Beacon's pre-submit review endpoint. Trigger on `/cr` exactly as you would `/cbcr-review`. Not the same as `/cr-review` (the admin inbox-sweep command in the Cloud-Beacon-CR repo).
+description: Shorthand alias for cbcr-review — submit working changes (diff, TFVC shelveset, or ADO Git PR) to Alta Beacon's pre-submit review endpoint. Trigger on `/cr` exactly as you would `/cbcr-review`. Not the same as `/cr-review` (the admin inbox-sweep command in the Cloud-Beacon-CR repo).
 ---
 
 # /cr — alias for cbcr-review

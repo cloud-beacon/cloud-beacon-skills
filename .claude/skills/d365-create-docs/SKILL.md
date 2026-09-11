@@ -1,6 +1,6 @@
 ---
 name: d365-create-docs
-description: Generate Cloud Beacon's standardized D365 F&O module documentation set — Architecture (developer-focused), User Guide (end-user), and Functional Guide (consultant/analyst) — following the PLM/SOV patterns. Use whenever the user asks to create, write, or generate documentation for a D365 module, write the architecture/user/functional guides, or document a feature area for a customer deliverable.
+description: Generate Alta Beacon's standardized D365 F&O module documentation set — Architecture (developer-focused), User Guide (end-user), and Functional Guide (consultant/analyst) — following the PLM/SOV patterns. Use whenever the user asks to create, write, or generate documentation for a D365 module, write the architecture/user/functional guides, or document a feature area for a customer deliverable.
 ---
 
 # D365 F&O: Create Module Documentation
@@ -8,7 +8,7 @@ description: Generate Cloud Beacon's standardized D365 F&O module documentation 
 <command-name>d365-create-docs</command-name>
 
 <description>
-Generate standardized documentation for a CloudBeacon D365 F&O module. Creates three coordinated guides following the established PLM/SOV documentation patterns: Architecture (for developers), User Guide (for end users), and Functional Guide (for consultants/analysts).
+Generate standardized documentation for an Alta Beacon D365 F&O module. Creates three coordinated guides following the established PLM/SOV documentation patterns: Architecture (for developers), User Guide (for end users), and Functional Guide (for consultants/analysts).
 </description>
 
 ## Instructions
@@ -23,7 +23,7 @@ Before writing, explore the codebase to understand:
 2. **Tables**: Main tables, parameters tables, extension tables
 3. **Enums**: Status enums, type enums, configuration enums
 4. **Forms**: Main forms, list pages, setup forms
-5. **Menu structure**: Where does this fit in the CloudBeacon menu?
+5. **Menu structure**: Where does this fit in the Alta Beacon menu?
 6. **Security**: Privileges, duties, roles
 7. **Batch jobs**: Controllers, services, queries
 8. **Integration points**: Extensions to standard D365 tables/forms
@@ -45,7 +45,7 @@ Example: `.reference/OrderValidation/`, `.reference/PLM/`, `.reference/Pricing/`
 **Required sections**:
 
 ```markdown
-# Cloud Beacon <Module Name> — Architecture Document
+# Alta Beacon <Module Name> — Architecture Document
 
 **Audience**: Internal Developers, Solution Architects
 **Version**: 1.0
@@ -118,7 +118,7 @@ Links to other relevant docs.
 **Required sections**:
 
 ```markdown
-# Cloud Beacon <Module Name> — User Guide
+# Alta Beacon <Module Name> — User Guide
 
 **Audience**: End users and administrators
 **Version**: 1.0
@@ -197,7 +197,7 @@ Bullet list of best practices for users.
 **Required sections**:
 
 ```markdown
-# Cloud Beacon <Module Name> — Functional Guide
+# Alta Beacon <Module Name> — Functional Guide
 
 **Audience**: Implementation consultants, business analysts, and IT administrators
 **Version**: 1.0
@@ -205,7 +205,7 @@ Bullet list of best practices for users.
 
 ## Introduction
 
-### What Is Cloud Beacon <Module Name>?
+### What Is Alta Beacon <Module Name>?
 One paragraph positioning statement.
 
 ### Key Capabilities
@@ -325,4 +325,4 @@ Creates three files in `.reference/<ModuleName>/`:
 - `<prefix>-user-guide.md` — End user guide
 - `<prefix>-functional-guide.md` — Functional specification
 
-Each document follows the established CloudBeacon documentation patterns and is ready for review.
+Each document follows the established Alta Beacon documentation patterns and is ready for review.

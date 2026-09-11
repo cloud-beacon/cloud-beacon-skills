@@ -1,6 +1,6 @@
 ---
 name: deck-to-page
-description: Turn a Cloud Beacon methodology PowerPoint deck into a Cloud-Beacon-Website Approach-style page (or refresh an existing one). Use whenever the user adds a .pptx to the website repo's updates/ folder and asks to incorporate it into a page — e.g. "I added Cloud_Beacon_X_Methodology to updates, please add it to the Y page". Covers text extraction, rendering slides to images for visual reference, and the proven mapping onto the ApproachContent data shape (spine accordion steps, capsule deliverables diagram, quote band, comparison panels, engagement layout).
+description: Turn an Alta Beacon methodology PowerPoint deck into a Cloud-Beacon-Website Approach-style page (or refresh an existing one). Use whenever the user adds a .pptx to the website repo's updates/ folder and asks to incorporate it into a page — e.g. "I added Cloud_Beacon_X_Methodology to updates, please add it to the Y page". Covers text extraction, rendering slides to images for visual reference, and the proven mapping onto the ApproachContent data shape (spine accordion steps, capsule deliverables diagram, quote band, comparison panels, engagement layout).
 ---
 
 # deck-to-page — PPTX methodology deck → Approach page
@@ -51,7 +51,7 @@ All content is data-driven: `APPROACH_PAGES` in `constants.ts`, rendered by `com
 ## 3. House conventions
 
 - **US spelling** (prioritise→prioritize, realise→realize, stabilise→stabilize, organisation→organization).
-- Voice: keep the deck's language nearly verbatim (it's Chad-approved), light grammar cleanup only; adapt third person to second person ("the client brings" → "you bring"). Implementer verbs only — never imply Cloud Beacon built D365 itself.
+- Voice: keep the deck's language nearly verbatim (it's Chad-approved), light grammar cleanup only; adapt third person to second person ("the client brings" → "you bring"). Implementer verbs only — never imply Alta Beacon built D365 itself.
 - `shortName` when a phase name is long (used by capsules and selectors).
 - Per-step "principle" quotes exist in the type but are NOT rendered (removed by Chad) — you may store them, don't add a renderer.
 - Steps default to all collapsed; panels stay in SSR HTML for SEO.

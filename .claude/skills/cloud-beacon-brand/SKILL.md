@@ -1,9 +1,13 @@
 ---
 name: cloud-beacon-brand
-description: Cloud Beacon's design system, palette, component motifs, and copy voice — distilled from the cloudbeacon.com build (July 2026). Use whenever creating or restyling ANY Cloud Beacon-branded artifact — web pages, dashboards, claude.ai artifacts, slide decks, documents, portal tools, emails, diagrams — so it matches the website's look, feel, and voice. Read BEFORE picking colors, styling components, or writing marketing copy for anything Cloud Beacon.
+description: Alta Beacon's design system, palette, component motifs, and copy voice — distilled from the July 2026 website build. Use whenever creating or restyling ANY Alta Beacon-branded artifact — web pages, dashboards, claude.ai artifacts, slide decks, documents, portal tools, emails, diagrams — so it matches the website's look, feel, and voice. Read BEFORE picking colors, styling components, or writing marketing copy for anything Alta Beacon.
 ---
 
-# Cloud Beacon Brand System
+# Alta Beacon Brand System
+
+**The company is Alta Beacon** (formerly Cloud Beacon); the legal entity is **Alta Beacon LLC**, a Delaware LLC. Write the name as two words in all prose.
+
+The `cb-brand` skill is the authoritative palette/typography/logo spec — this skill is the web-specific layer on top of it (component motifs, interaction language, copy voice). Where the two disagree on a value, `cb-brand` wins.
 
 Canonical reference: the live site (https://www.dynamicschad.com, production cloudbeacon.com) and the Cloud-Beacon-Website repo (`src/styles/global.css` for tokens, `CLAUDE.md` for repo-specific rules).
 
@@ -56,14 +60,15 @@ Canonical reference: the live site (https://www.dynamicschad.com, production clo
 
 ## Logo & favicon
 
-- Use the brand **PNG** wordmark (website: `public/assets/logo.png`); the original SVG has a malformed "a" glyph — never resurrect it. White-on-dark via CSS `brightness-0 invert`.
-- The circular "CB" mark can be cropped from the wordmark's left ~400px (trim transparent edges).
-- Favicon/app icon across ALL Cloud Beacon tooling: **navy square, white mark** — canonical files in `cloud-beacon-tools/portal/app/` (icon.png 256, apple-icon.png 180, favicon.ico). Copy those; don't regenerate variants.
+- The official Alta Beacon lockups ship in the `cb-brand` skill's `assets/` folder, all horizontal: `alta-beacon.svg` (light/transparent grounds), `alta-beacon-reversed.svg` (dark/transparent grounds), `alta-beacon-on-navy.svg` and `alta-beacon-on-white.svg` (plate baked in). PNGs sit alongside each. Match the lockup to its background rather than inverting one in CSS — a transparent reversed lockup on a white page is invisible.
+- The mark is two mountain peaks under a gold sun. Never recolor it, re-space the wordmark, or separate the peaks from the sun, and don't fabricate a stacked lockup.
+- The retired Cloud Beacon PNG wordmark (`public/assets/logo.png`) and its malformed-"a" SVG are dead — don't resurrect either.
+- Favicon/app icon across ALL Alta Beacon tooling: **navy square, white mark** — canonical files in `cloud-beacon-tools/portal/app/` (icon.png 256, apple-icon.png 180, favicon.ico). Copy those; don't regenerate variants. ⚠️ Confirm they've been refreshed to the Alta Beacon mark before reusing.
 - Third-party brand marks (LinkedIn etc.) keep their official colors (e.g. LinkedIn `#0A66C2`) — the cb-token rule doesn't apply to other companies' logos.
 
 ## Voice & copy
 
-- **Implementer verbs, always**: Cloud Beacon *implemented / configured / tailored / tuned* D365. Never copy implying Cloud Beacon *built/created* D365 itself. ("A plan built around your business" is fine — the plan is ours; the platform is Microsoft's.)
+- **Implementer verbs, always**: Alta Beacon *implemented / configured / tailored / tuned* D365. Never copy implying Alta Beacon *built/created* D365 itself. ("A plan built around your business" is fine — the plan is ours; the platform is Microsoft's.)
 - Tone: listen-first, plain-spoken, no jargon walls. Signature constructions: "X, not Y" ("Root cause, not band-aids", "with your team, not ahead of them"), and honest-partner lines ("A client who needs us less is a client we've done our job for").
 - US spelling (normalize British source material: prioritise→prioritize, etc.).
 - Company facts: Kansas City, MO, serving nationwide · info@cloudbeacon.com · +1 (626) 325-8662 · industries: Food & Beverage, Retail, Manufacturing · LinkedIn: linkedin.com/company/cloudbeacond365.
