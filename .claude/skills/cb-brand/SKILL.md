@@ -22,7 +22,7 @@ Write the name as **two words — "Alta Beacon"** in all prose, headings, and do
 
 ## Logo
 
-Five lockups ship in `assets/`, all horizontal. There is no stacked lockup — do not fabricate one by re-stacking the wordmark. There is **no square/app-icon lockup**; see the note below.
+Five full lockups ship in `assets/`, all horizontal, plus two mark-only files. There is no stacked lockup — do not fabricate one by re-stacking the wordmark. There is no purpose-built square app icon; see the note below.
 
 | File | Background it goes on | Wordmark | Plate |
 | ---- | --------------------- | -------- | ----- |
@@ -32,13 +32,28 @@ Five lockups ship in `assets/`, all horizontal. There is no stacked lockup — d
 | `alta-beacon-on-navy.svg` / `.png` | Same, with generous padding around the lockup | White + teal | solid navy `#002C47` |
 | `alta-beacon-on-white.svg` / `.png` | A white plate baked in, generous padding | Navy + teal | solid white |
 
+**Mark only — no wordmark.** Use where the name already appears beside the logo (a nav
+bar whose title reads "Alta Beacon Tools", a sign-in heading above the mark), or where a
+full lockup is too wide to stay legible. These were extracted from the official artwork
+as vector paths, so the geometry is the designer's — not a crop of a raster.
+
+| File | Background it goes on | Colors |
+| ---- | --------------------- | ------ |
+| `alta-beacon-mark.svg` / `.png` | Light | Navy `#002C47` peak, teal peak, gold sun |
+| `alta-beacon-mark-reversed.svg` / `.png` | Dark | White peak, teal peak, gold sun |
+
+Both are `327 × 252`, very slightly wider than tall. Set width and height to that ratio
+or the peaks skew. On navy, the dark variant's navy peak disappears — use the reversed one.
+
 **Only the first two are transparent.** The three plated files carry a full-bleed background rect, so dropping `alta-beacon-on-navy` onto anything that is not `#002C47` shows a navy block. Check which you need before placing.
 
 `alta-beacon-logo-sheet.pdf` is the full sheet. The `.ai` source lives in the website repo under `updates/Final/`.
 
-**Known gap — no square app icon.** Favicons, `apple-touch-icon`, and any square avatar
-need a square mark that does not ship here. Do not invent one by cropping a lockup and
-rasterizing it; ask for the asset. Until it exists, apps may keep their existing icon.
+**Square app icons.** There is still no purpose-built square icon, but the mark files
+above are the correct basis for one: center `alta-beacon-mark-reversed.svg` on a navy
+`#002C47` square, or `alta-beacon-mark.svg` on white, with even padding. Do not crop a
+*lockup* to fake an icon, and do not recolor or re-proportion the mark to make it fill
+a square.
 
 The mark is two mountain peaks (navy and teal) under a gold sun. **Never recolor the mark, re-space the wordmark, or separate the peaks from the sun.** Pick the lockup whose background matches — putting the transparent reversed logo on a white page renders it invisible.
 
