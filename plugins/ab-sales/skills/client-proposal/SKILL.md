@@ -22,11 +22,17 @@ plain words ("It's live at ... and matches what we saved").
 
 Run these yourself and stop at the first failure. Don't start work the user can't save.
 
-1. `gh --version`. If it's missing, install it for them if you can
-   (`winget install --id GitHub.cli -e` on Windows, `brew install gh` on Mac). Otherwise
-   tell them to install the GitHub CLI.
-2. `gh auth status`. If they aren't signed in, ask them to type `! gh auth login`
-   and follow the prompts in the browser.
+1. `git --version`, `gh --version` and `node --version`. For anything missing, install it
+   for them if you can (Windows: `winget install --id Git.Git -e`,
+   `winget install --id GitHub.cli -e`, `winget install --id OpenJS.NodeJS.LTS -e`;
+   Mac: `brew install git gh node`). Newly installed tools may need the app restarted
+   before they're found. If you're running inside Cowork, stop: this workflow needs the
+   Code tab of the desktop app (or Claude Code in a terminal), because Cowork's sandbox
+   doesn't have their GitHub sign-in.
+2. `gh auth status`. If they aren't signed in, have them run `gh auth login` in
+   PowerShell (or type `! gh auth login` here in a terminal session) and follow the
+   prompts in the browser. Then run `gh auth setup-git` yourself so git can push
+   without prompting.
 3. `gh repo view cloud-beacon/Proposals --json name,viewerPermission`
    - **It fails ("Could not resolve to a Repository") or `viewerPermission` is `READ`**:
      they don't have access yet. If they have several GitHub accounts, try
@@ -48,12 +54,12 @@ Run these yourself and stop at the first failure. Don't start work the user can'
      downloaded copy of the live page).
    - `WRITE`, `MAINTAIN` or `ADMIN`: continue.
 4. Find their copy: `~/source/repos/Proposals`, otherwise ask where it is. If there isn't
-   one: `gh repo clone cloud-beacon/Proposals ~/source/repos/Proposals`.
+   one: `gh repo clone cloud-beacon/Proposals ~/source/repos/Proposals`. If this session
+   isn't opened on that folder, work in it by absolute path.
 5. `git status --short`. If there are changes the user didn't make in this session, ask
    before touching them; they may be someone's unfinished work. Then
    `git switch main` and `git pull --rebase`.
-6. Read `CONTRIBUTING.md` in the repo. `node --version` must work (the check script
-   needs Node); if it doesn't, install Node LTS or tell them to.
+6. Read `CONTRIBUTING.md` in the repo.
 
 ## Step 1: collect the inputs
 

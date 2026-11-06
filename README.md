@@ -6,7 +6,12 @@ only the groups you need.
 
 ## Install
 
-In Claude Code (CLI, desktop or VS Code), add this repo as a plugin marketplace once:
+**Desktop app (Code tab):** click **+** next to the message box → **Plugins** → add the
+marketplace `cloud-beacon/cloud-beacon-skills`, then install the groups you want.
+Cowork can install these plugins too, but skills that run `git`/`gh` on your machine
+(the proposal skills, TFVC, code review) need the Code tab or the terminal.
+
+**Terminal (or the VS Code extension):** add this repo as a plugin marketplace once:
 
 ```
 /plugin marketplace add cloud-beacon/cloud-beacon-skills
