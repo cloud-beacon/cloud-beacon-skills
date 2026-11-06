@@ -6,9 +6,9 @@ This repo holds two kinds of Claude Code extensions plus shared hooks. Pick the 
 
 | Kind | Fires when | Use for |
 |------|------------|---------|
-| **Skill** (`.claude/skills/<name>/SKILL.md`) | Claude judges the description matches the conversation context | Reference standards, gotchas, generators, patterns — anything that should apply whenever a topic comes up, no slash needed |
-| **Command** (`.claude/commands/<name>.md`) | User types `/<name>` | Workflows with real side effects (writes to ADO, sends mail, runs deploys) — anything where unintended firing would be costly |
-| **Hook** (`.claude/settings.json` + `.claude/hooks/*`) | Claude Code itself fires the configured tool event (`PreToolUse`, `PostToolUse`, etc.) | Mechanical actions that must always run, never forgotten by Claude — formatters, linters, encoding fixers |
+| **Skill** (`plugins/<plugin>/skills/<name>/SKILL.md`) | Claude judges the description matches the conversation context | Reference standards, gotchas, generators, patterns — anything that should apply whenever a topic comes up, no slash needed |
+| **Command** (`plugins/<plugin>/commands/<name>.md`) | User types `/<plugin>:<name>` | Workflows with real side effects (writes to ADO, sends mail, runs deploys) — anything where unintended firing would be costly |
+| **Hook** (`plugins/<plugin>/hooks/hooks.json` + script) | Claude Code itself fires the configured tool event (`PreToolUse`, `PostToolUse`, etc.) | Mechanical actions that must always run, never forgotten by Claude — formatters, linters, encoding fixers |
 
 **Skills are the default.** Reach for a command only when explicit invocation is a feature (ADO writes, destructive ops). Reach for a hook only when "Claude should remember to do X" is fragile and "the harness always does X" is the actual requirement.
 
@@ -53,40 +53,43 @@ Notice both list concrete vocabulary the user might type. Vague descriptions lik
 ### Skill folder layout
 
 ```
-.claude/skills/<skill-name>/
+plugins/<plugin>/skills/<skill-name>/
 ├── SKILL.md           # required
 └── scripts/           # optional — bundled scripts the skill invokes
     └── ...
 ```
 
+Pick the plugin by who uses the skill (sales, marketing, D365 development, code review, delivery documents). Skills in different plugins can't rely on each other's files, so keep a skill's scripts inside its own folder and find them from the "Base directory for this skill" Claude Code shows on load.
+
 Bundled scripts should be self-contained (Python stdlib only, PowerShell with no module imports, etc.) so the skill works in any environment without a setup step.
 
 ## Writing a slash command
 
-Slash commands are plain markdown — no frontmatter required, no auto-trigger. Name the file `<command>.md`; the user invokes with `/<command>`. Use commands sparingly — see [`.claude/commands/cb-agent.md`](.claude/commands/cb-agent.md) for the kind of explicit-invocation workflow that fits.
+Slash commands are plain markdown — no frontmatter required, no auto-trigger. Name the file `<command>.md`; the user invokes with `/<plugin>:<command>`. Use commands sparingly — see [`cb-agent.md`](plugins/ab-d365-dev/commands/cb-agent.md) for the kind of explicit-invocation workflow that fits.
 
 ## Writing a hook
 
 Hooks live in two pieces:
 
-1. **`.claude/settings.json`** — declares which tool events fire which commands
-2. **`.claude/hooks/<name>.<ext>`** — the script Claude Code executes
+1. **`plugins/<plugin>/hooks/hooks.json`** — declares which tool events fire which commands
+2. **`plugins/<plugin>/hooks/<name>.<ext>`** — the script Claude Code executes, referenced as `${CLAUDE_PLUGIN_ROOT}/hooks/<name>.<ext>`
 
-The hook command receives a JSON payload on stdin describing the tool call (`tool_name`, `tool_input.file_path`, etc.). See [`.claude/hooks/d365-normalize-crlf.ps1`](.claude/hooks/d365-normalize-crlf.ps1) for the canonical pattern.
+The hook command receives a JSON payload on stdin describing the tool call (`tool_name`, `tool_input.file_path`, etc.). See [`d365-normalize-crlf.ps1`](plugins/ab-d365-dev/hooks/d365-normalize-crlf.ps1) for the canonical pattern.
 
 ### Hook safety rules
 
 - **Never block** the tool call due to a hook bug — wrap the body in try/catch and exit 0 on internal errors. A broken hook should fail open, not lock the user out.
 - **Filter aggressively in the script,** not just the `matcher`. Matchers select by tool name; path/content filtering happens in the script. A `Write|Edit|MultiEdit` hook fires on every write — do your "does this apply?" check first and exit 0 fast if not.
 - **Be idempotent.** PostToolUse hooks may re-run if the user retries an edit. The hook should produce the same result on the second run.
-- **Use `$CLAUDE_PROJECT_DIR`** to locate bundled scripts — never assume a cwd.
+- **Use `${CLAUDE_PLUGIN_ROOT}`** to locate bundled scripts — never assume a cwd.
+- **Plugin hooks run in every project** where the plugin is enabled, so the script must no-op fast on anything that isn't its target.
 
 ## Workflow
 
 1. Branch off `main`.
 2. Add or modify the skill/command/hook. Bump the description if the trigger behavior changed.
-3. Test by symlinking your branch into a project and seeing whether the skill loads on the intended phrase. (For hooks: write a test file and watch the hook fire.)
-4. Update [`README.md`](README.md) — and [`D365-NOTES.md`](D365-NOTES.md) if it's a D365 skill — with one row describing what you added.
+3. Test with `claude --plugin-dir <repo>/plugins/<plugin>` in a real project and see whether the skill loads on the intended phrase. Run `claude plugin validate .` from the repo root. (For hooks: write a test file and watch the hook fire.)
+4. New plugin? Add it to `.claude-plugin/marketplace.json`. Update [`README.md`](README.md) — and [`D365-NOTES.md`](D365-NOTES.md) if it's a D365 skill — with one row describing what you added.
 5. Open a PR. The reviewer's first question will be "does the description fire on the right phrases and *only* the right phrases?" — be ready to defend it.
 
 ## When in doubt

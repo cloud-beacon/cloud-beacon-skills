@@ -181,7 +181,7 @@ These skills are markdown files that Claude Code loads as context. You can:
 ## Troubleshooting
 
 ### Skill Not Loading
-- Verify `SKILL.md` is at `.claude/skills/<name>/SKILL.md` (not in `.claude/commands/`)
+- Verify the `ab-d365-dev` plugin is installed and enabled (`/plugin`), and that `SKILL.md` is at `plugins/<plugin>/skills/<name>/SKILL.md`
 - Confirm the YAML frontmatter has `name` and `description` fields
 - Restart Claude Code if recently installed
 - If a skill should be firing but isn't, describe your intent more concretely — skills match on description keywords

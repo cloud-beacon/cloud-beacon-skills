@@ -1,0 +1,6 @@
+{
+  "name": "ab-sales",
+  "description": "Alta Beacon client proposals: create a new branded web proposal or change an existing one, and publish it. Includes the proposal-writer agent.",
+  "version": "1.0.0",
+  "author": { "name": "Alta Beacon" }
+}

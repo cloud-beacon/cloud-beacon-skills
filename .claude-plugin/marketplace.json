@@ -1,0 +1,37 @@
+{
+  "name": "altabeacon",
+  "owner": {
+    "name": "Alta Beacon",
+    "email": "cdalton@altabeacon.com"
+  },
+  "metadata": {
+    "description": "Alta Beacon's Claude Code plugins, grouped by team: sales, marketing, D365 development, code review, delivery documents."
+  },
+  "plugins": [
+    {
+      "name": "ab-sales",
+      "source": "./plugins/ab-sales",
+      "description": "Create and update client web proposals, and publish them"
+    },
+    {
+      "name": "ab-marketing",
+      "source": "./plugins/ab-marketing",
+      "description": "Brand, voice, website images, LinkedIn quote cards"
+    },
+    {
+      "name": "ab-d365-dev",
+      "source": "./plugins/ab-d365-dev",
+      "description": "X++ development for D365 Finance & Operations"
+    },
+    {
+      "name": "ab-code-review",
+      "source": "./plugins/ab-code-review",
+      "description": "X++ code review and TFVC tooling"
+    },
+    {
+      "name": "ab-delivery-docs",
+      "source": "./plugins/ab-delivery-docs",
+      "description": "FDDs, D365 documentation sets, Word generation"
+    }
+  ]
+}

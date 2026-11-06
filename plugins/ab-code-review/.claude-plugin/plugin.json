@@ -1,0 +1,6 @@
+{
+  "name": "ab-code-review",
+  "description": "X++ code review and TFVC: the review framework, the pre-submit review service (/cr), fetching shelvesets and changesets, and unattended TFVC merges.",
+  "version": "1.0.0",
+  "author": { "name": "Alta Beacon" }
+}

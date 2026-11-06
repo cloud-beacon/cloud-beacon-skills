@@ -1,69 +1,75 @@
 # Alta Beacon Skills
 
-A collection of reusable Claude Code skills and slash commands for Alta Beacon development, including D365 Finance & Operations, Azure, brand/voice standards, and automation workflows.
+Alta Beacon's Claude Code skills, agents, commands and hooks, grouped into plugins by
+team: sales, marketing, D365 development, code review and delivery documents. Install
+only the groups you need.
 
-## Skills vs. Commands
+## Install
 
-This repo contains two flavors of Claude Code extension:
+In Claude Code (CLI, desktop or VS Code), add this repo as a plugin marketplace once:
 
-- **Slash commands** (`.claude/commands/*.md`) — Explicit, one-shot workflows you invoke by typing `/<name>`. Best for "do this thing now" generators (e.g. `/d365-new-table` scaffolds a new table).
-- **Skills** (`.claude/skills/<name>/SKILL.md`) — Context that auto-loads when relevant, based on the skill's `description` frontmatter. Best for reference standards and gotchas that should apply across many requests without explicit invocation (e.g. `cb-voice` fires whenever the user is editing Alta Beacon-facing content).
-
-## Installation
-
-### Option 1: Clone to Your Project
-Clone this repo and copy the `.claude/` folder to your project:
-
-```powershell
-git clone https://github.com/cloud-beacon/cloud-beacon-skills.git
-Copy-Item -Path "cloud-beacon-skills\.claude" -Destination "path\to\your\project\" -Recurse
+```
+/plugin marketplace add cloud-beacon/cloud-beacon-skills
 ```
 
-### Option 2: Symlink (Recommended for Development)
-Create symlinks so updates to the skills repo are immediately available:
+Then install the groups you want:
 
-```powershell
-# From your project directory
-New-Item -ItemType SymbolicLink -Path ".claude\commands" -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\commands"
-New-Item -ItemType SymbolicLink -Path ".claude\skills"   -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\skills"
-New-Item -ItemType SymbolicLink -Path ".claude\hooks"    -Target "C:\Users\<you>\source\repos\cloud-beacon-skills\.claude\hooks"
+```
+/plugin install ab-sales@altabeacon
+/plugin install ab-marketing@altabeacon
+/plugin install ab-d365-dev@altabeacon
+/plugin install ab-code-review@altabeacon
+/plugin install ab-delivery-docs@altabeacon
 ```
 
-> **Note:** `New-Item -ItemType SymbolicLink` on Windows requires either an elevated shell (Run as Administrator) or [Developer Mode enabled](https://learn.microsoft.com/en-us/windows/apps/get-started/developer-mode-features-and-debugging) (Settings → Privacy & security → For developers).
+Or run `/plugin`, open the **altabeacon** marketplace and pick from the list. To get
+updates later: `/plugin marketplace update altabeacon`.
 
-### Option 3: Global Installation
-Copy to your global Claude Code config to make commands and skills available in all projects:
+You don't type the skill names. Describe what you want ("update the WellBoss proposal",
+"create an X++ table for vendor invoice logs") and the matching skill loads. Plugin skills
+and commands can also be called explicitly as `/<plugin>:<name>`, e.g. `/ab-code-review:cr`.
 
-```powershell
-Copy-Item -Path "cloud-beacon-skills\.claude\commands\*" -Destination "$env:USERPROFILE\.claude\commands\" -Force
-Copy-Item -Path "cloud-beacon-skills\.claude\skills\*"   -Destination "$env:USERPROFILE\.claude\skills\"   -Force
+**Working from a repo?** A project can ask Claude Code to offer these plugins to everyone
+who opens it. Add this to the project's `.claude/settings.json` (the Proposals repo does):
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "altabeacon": { "source": { "source": "github", "repo": "cloud-beacon/cloud-beacon-skills" } }
+  },
+  "enabledPlugins": { "ab-sales@altabeacon": true }
+}
 ```
 
-## Available Skills (auto-triggering)
+## The plugins
 
-Skills load automatically when their description matches the context — no command needed.
+### ab-sales: client proposals
 
-### Alta Beacon brand & engineering
+| Skill / agent | Use it for |
+|---|---|
+| `client-proposal` | "Create a proposal for Acme from this email": a new client-branded proposal page, published as a link |
+| `proposal-update` | "Change the rate on the WellBoss proposal", "make it live": edits an existing proposal and publishes it |
+| `proposal-writer` (agent) | Hand off a whole proposal job; it works from the two skills above |
 
-| Skill | Trigger | Description |
-|-------|---------|-------------|
-| `cb-voice` | "rewrite in Alta Beacon voice", customer-facing drafting/editing, proposals, SOWs, FDDs, reports | Brand voice & tone — structural, language, and tone-by-document-type rules for external writing |
-| `cb-brand` | Styling any Alta Beacon-branded UI/HTML/Figma/SwiftUI/slide/marketing output, design tokens | Visual identity — exact color palette, typography, spacing, and component patterns |
-| `docx-survival` | `import { ... } from 'docx'`, building DOCX exporters, "Word found unreadable content" debugging | Hard-won gotchas for the `docx` npm package (v9) — image type, SVG handling, TextRun pitfalls, hyperlink bug |
-| `client-proposal` | "create a proposal for \<client\>", turning a scope email into a sendable proposal link | Client-branded single-page web proposal (LCA-style editorial layout, client-color theming, Vercel deploy); bundles the Shamrock proposal as reference implementation |
+Proposals live in the private `cloud-beacon/Proposals` repo. Both skills check your access
+first. Without access, Claude gives you a ready-to-send request to Chad.
 
-### D365 Finance & Operations
+### ab-marketing: brand and content
 
-See [D365-NOTES.md](D365-NOTES.md) for cross-cutting D365 knowledge (CRLF rules, `.rnrproj` layout, common gotchas, workflow examples).
+| Skill | Use it for |
+|---|---|
+| `cb-voice` | Customer-facing writing in Alta Beacon's voice: proposals, SOWs, FDDs, reports |
+| `cb-brand` | Styling anything Alta Beacon-branded: palette, type, spacing, logos |
+| `alta-beacon-brand` | The design system distilled from the website build |
+| `cb-image-intake` | Putting images onto Alta Beacon web properties |
+| `cb-photo-background` | Replacing or recoloring a photo background |
+| `deck-to-page` | Turning a methodology deck into a website Approach page |
+| `linkedin-quote-card` | A LinkedIn quote card from the Canva template |
 
-**Review & Quality**
+### ab-d365-dev: X++ development
 
-| Skill | Triggers on |
-|-------|-------------|
-| `xpp-code-review` | "review this X++", critiquing/sanity-checking D365 objects, PRs, shelvesets — 19-category severity-rated check framework |
-| `tfvc-fetch` | "show me shelveset X", "diff for changeset 12345", fetching ADO TFVC changes as review-ready Markdown (read-only) |
-
-**Create / Extend Artifacts**
+See [D365-NOTES.md](D365-NOTES.md) for cross-cutting D365 knowledge (CRLF rules, `.rnrproj`
+layout, common gotchas, workflow examples).
 
 | Skill | Triggers on |
 |-------|-------------|
@@ -86,70 +92,54 @@ See [D365-NOTES.md](D365-NOTES.md) for cross-cutting D365 knowledge (CRLF rules,
 | `d365-extend-enum` | "add a value to a base enum" |
 | `d365-extend-edt` | "change a property on a base EDT" |
 | `d365-security` | "set up security for X", Role → Duty → Privilege → Entry Point |
-| `d365-create-docs` | "write the Architecture / User / Functional guide for this module" |
 | `d365-fix-encoding` | "files won't open in VS" / CRLF normalization / D365 metadata encoding |
 
-## Available Slash Commands
+Also in this plugin:
 
-Slash commands require explicit invocation (`/<name>`). Reserved for workflows with real side effects that shouldn't auto-fire from conversational drift.
+- **Command `/ab-d365-dev:cb-agent`**: automated Azure DevOps work-item processor (creates
+  branches, commits, opens PRs). Explicit invocation only, because it changes ADO state.
+  Needs the `az` CLI signed in.
+- **Hook `d365-normalize-crlf`**: after every Write/Edit, normalizes D365 metadata XML
+  (`Ax<Type>\*.xml`) to CRLF. It does nothing for any other file, so it's safe to leave on.
 
-| Command | Description |
-|---------|-------------|
-| `/cb-agent` | Automated Azure DevOps work item processor — creates branches, makes commits, opens PRs. Explicit invocation required because it modifies ADO state. |
+### ab-code-review: X++ review and TFVC
 
-## Hooks
+| Skill | Use it for |
+|---|---|
+| `xpp-code-review` | Reviewing X++ / D365 objects, PRs, shelvesets: the 19-category, severity-rated framework |
+| `cbcr-review` | Sending your working changes to the pre-submit review service (report by email) |
+| `cr` | Shorthand for `cbcr-review` (`/ab-code-review:cr`) |
+| `tfvc-fetch` | "Show me shelveset X", "diff for changeset 12345", as review-ready Markdown (read-only) |
+| `tfvc-merge` | Unattended TFVC merges, promoting changesets from a lower branch to a higher one |
 
-Configured in [`.claude/settings.json`](.claude/settings.json). Hooks fire automatically on Claude Code tool events — they run reliably regardless of whether a skill remembered to mention them.
+### ab-delivery-docs: delivery documents
 
-| Hook | Fires on | What it does |
-|------|----------|--------------|
-| `d365-normalize-crlf` | `PostToolUse` for `Write` / `Edit` / `MultiEdit` | Detects D365 metadata XML paths (`Ax<Type>\*.xml`) and normalizes line endings to CRLF immediately after write. No-ops silently on non-D365 files. |
+| Skill | Use it for |
+|---|---|
+| `fdd-chain` | A Functional Design Document from a discovery transcript, requirements or notes |
+| `d365-create-docs` | The standard module documentation set: Architecture, User Guide, Functional |
+| `docx-survival` | Gotchas for the `docx` npm package when generating Word documents |
 
-Hooks travel with the `.claude/` folder — copying or symlinking the repo into your project activates them automatically.
-
-## Usage
-
-**Skills** load automatically when relevant. Just describe what you want:
-
-> "let's add a new VendInvoiceLog table" → `d365-new-table` fires
->
-> "rewrite this section to be customer-facing" → `cb-voice` fires
->
-> "this exports a corrupt .docx" → `docx-survival` fires
-
-**Slash commands** are typed explicitly:
-
-```
-/cb-agent
-```
-
-## Repository Layout
+## Repository layout
 
 ```
 .
-├── D365-NOTES.md                       # Cross-cutting D365 F&O knowledge
-├── CONTRIBUTING.md                     # How to author skills, commands, and hooks
-└── .claude/
-    ├── settings.json                   # Hook registrations
-    ├── hooks/
-    │   └── d365-normalize-crlf.ps1     # PostToolUse CRLF normalizer
-    ├── commands/                       # Slash commands (explicit invocation)
-    │   └── cb-agent.md                 # ADO work item processor
-    └── skills/                         # Auto-triggering skills (context-loaded)
-        ├── cb-voice/SKILL.md           # Brand voice & tone
-        ├── cb-brand/SKILL.md           # Visual identity tokens & patterns
-        ├── docx-survival/SKILL.md      # `docx` npm package gotchas
-        ├── xpp-code-review/SKILL.md    # X++ code review framework
-        ├── tfvc-fetch/                 # TFVC shelveset/changeset diff fetcher
-        │   ├── SKILL.md
-        │   └── scripts/tfvc_review.py
-        ├── d365-new-*/SKILL.md         # Create new D365 artifacts
-        ├── d365-extend-*/SKILL.md      # Extend base D365 artifacts
-        ├── d365-batch-job/SKILL.md
-        ├── d365-security/SKILL.md
-        ├── d365-create-docs/SKILL.md
-        └── d365-fix-encoding/SKILL.md
+├── .claude-plugin/marketplace.json   # Lists the plugins below
+├── plugins/
+│   ├── ab-sales/
+│   │   ├── .claude-plugin/plugin.json
+│   │   ├── skills/<name>/SKILL.md
+│   │   └── agents/proposal-writer.md
+│   ├── ab-marketing/       (skills/)
+│   ├── ab-d365-dev/        (skills/, commands/cb-agent.md, hooks/hooks.json + d365-normalize-crlf.ps1)
+│   ├── ab-code-review/     (skills/)
+│   └── ab-delivery-docs/   (skills/)
+├── D365-NOTES.md                     # Cross-cutting D365 F&O knowledge
+└── CONTRIBUTING.md                   # How to author skills, commands, hooks and plugins
 ```
+
+Claude Code only finds skills one folder deep, so grouping works through plugins, not
+subfolders of `.claude/skills/`.
 
 ## Requirements
 
@@ -159,11 +149,11 @@ Hooks travel with the `.claude/` folder — copying or symlinking the repo into 
 
 ## Customization
 
-Skills live at `.claude/skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`). The `description` is what determines when the skill auto-loads — be specific. Slash commands live at `.claude/commands/<name>.md` as plain markdown. You can:
+Skills live at `plugins/<plugin>/skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`). The `description` is what determines when the skill auto-loads, so be specific. Commands live at `plugins/<plugin>/commands/<name>.md`. You can:
 
 - Tighten or broaden a skill's `description` to control when it fires
 - Modify templates inside each skill to match your naming conventions
-- Add new skills or commands following the same pattern
+- Add new skills or commands to the plugin they belong to (or a new plugin, listed in `.claude-plugin/marketplace.json`)
 
 ### D365 Model Context
 
@@ -189,7 +179,7 @@ Quick version:
 
 1. Fork or branch off `main`
 2. Add or modify the skill / command / hook
-3. Test by symlinking your branch into a real project and verifying the trigger fires (or doesn't) where expected
+3. Test with `claude --plugin-dir plugins/<plugin>` in a real project and check the trigger fires (or doesn't) where expected; run `claude plugin validate .`
 4. Update [`README.md`](README.md) and [`D365-NOTES.md`](D365-NOTES.md) if applicable
 5. Open a PR
 

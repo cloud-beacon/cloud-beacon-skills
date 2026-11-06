@@ -1,0 +1,6 @@
+{
+  "name": "ab-delivery-docs",
+  "description": "Delivery documents: functional design documents (FDD), D365 module documentation sets, and Word (docx) generation gotchas.",
+  "version": "1.0.0",
+  "author": { "name": "Alta Beacon" }
+}

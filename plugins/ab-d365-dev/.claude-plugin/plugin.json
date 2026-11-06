@@ -1,0 +1,6 @@
+{
+  "name": "ab-d365-dev",
+  "description": "D365 Finance & Operations X++ development: scaffold and extend tables, classes, forms, EDTs, enums, entities, services, security and more; CRLF hook for metadata XML; the cb-agent ADO work-item command.",
+  "version": "1.0.0",
+  "author": { "name": "Alta Beacon" }
+}
